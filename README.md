@@ -1,7 +1,7 @@
 
-# 🧾 Pahana Institute - Smart Billing & Inventory Management System
+# 🧾 Pahana EDU - Smart Billing System
 
-Welcome to the official repository of the **Pahana Institute's Smart Billing & Inventory Dashboard** — a modern, responsive, and efficient full-stack web application built to manage customers, inventory, and billing in an educational institution.
+Welcome to the official repository of the **Pahana EDU's Smart Billing & Inventory Dashboard** — a modern, responsive, and efficient full-stack web application built to manage customers, inventory, and billing in an educational institution.
 
 > 🚀 Designed with simplicity in mind, but powerful enough to streamline admin tasks with real-time insights and billing automation.
 
