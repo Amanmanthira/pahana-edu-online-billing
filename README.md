@@ -22,7 +22,7 @@ Welcome to the official repository of the **Pahana Institute's Smart Billing & I
   - 📦 Total Items
   - 💵 Total Billing Amount (in LKR)
 - ✅ **Logout Functionality** – Secure session handling for admins.
-- 🖨️ **Printable Bill Receipts** *(coming soon)*
+- 🖨️ **Printable Bill Receipts** 
 
 ---
 
