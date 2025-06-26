@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="Style.css" />
+<script src="index.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<title>Pahana Edu Dashboard</title>
+</head>
+<body>
+    
+<div class="sidebar">
+<h2 class="typing-text"><span id="typed-text"></span><span class="cursor">|</span></h2>
+  <div class="nav-item active" onclick="showSection('analytics', this)">📊 Analytics</div>
+  <div class="nav-item" onclick="showSection('customers', this)">👥 Customers</div>
+  <div class="nav-item" onclick="showSection('items', this)">📦 Items</div>
+  <div class="nav-item" onclick="showSection('bill', this)">🧾 Generate Bill</div>
+  <li class="nav-item" onclick="showSection('history', this)">Bill History</li>
+  <div class="nav-item" onclick="showSection('help', this)">❓ Help</div>
+</div>
+
+<div class="main-content">
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: #f5f5f5; border-bottom: 2px solid #ddd;">
+  <div>
+    <h1 style="margin: 0; font-size: 28px; color: #333;">Welcome Back, Admin 👋</h1>
+    <p style="margin: 5px 0 0 0; font-size: 16px; color: #666;">Here’s what’s happening in your dashboard today.</p>
+  </div>
+  <button 
+    onclick="logout()" 
+    style="background-color: #e74c3c; color: white; border: none; padding: 10px 18px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">
+    Logout
+  </button>
+</div>
+
+    
+    <!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+<div id="analytics" class="section" style="display:none;">
+  <h2 style="font-size: 28px; font-weight: bold; margin-bottom: 30px; color: #2c3e50;">
+    📊 Admin Dashboard Analytics
+  </h2>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 25px;">
+    <!-- Total Customers -->
+    <div style="
+      flex: 1;
+      min-width: 250px;
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    ">
+      <div style="font-size: 36px; margin-right: 20px;">
+        <i class="fas fa-users"></i>
+      </div>
+      <div>
+        <h3 style="margin: 0 0 5px 0; font-size: 18px;">Total Customers</h3>
+        <p id="totalCustomers" style="margin: 0; font-size: 28px; font-weight: bold;">0</p>
+      </div>
+    </div>
+
+    <!-- Total Items -->
+    <div style="
+      flex: 1;
+      min-width: 250px;
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      color: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    ">
+      <div style="font-size: 36px; margin-right: 20px;">
+        <i class="fas fa-box-open"></i>
+      </div>
+      <div>
+        <h3 style="margin: 0 0 5px 0; font-size: 18px;">Total Items</h3>
+        <p id="totalItems" style="margin: 0; font-size: 28px; font-weight: bold;">0</p>
+      </div>
+    </div>
+
+    <!-- Total Bills -->
+    <div style="
+      flex: 1;
+      min-width: 250px;
+      background: linear-gradient(135deg, #e67e22, #d35400);
+      color: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    ">
+      <div style="font-size: 36px; margin-right: 20px;">
+        <i class="fas fa-receipt"></i>
+      </div>
+      <div>
+        <h3 style="margin: 0 0 5px 0; font-size: 18px;">Total Bills (LKR)</h3>
+        <p id="totalBills" style="margin: 0; font-size: 28px; font-weight: bold;">0</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <div id="customers" class="section">
+    <h1>Customer Management</h1>
+    <form id="customerForm" onsubmit="addOrUpdateCustomer(event)">
+      <input type="hidden" id="customerAccountNo" />
+      <input type="text" id="customerName" placeholder="Name" required />
+      <input type="text" id="customerAddress" placeholder="Address" required />
+      <input type="text" id="customerPhone" placeholder="Phone" required />
+      <input type="number" id="customerUnits" placeholder="Units Consumed" required min="0" />
+      <input type="text" id="customerAccountNoInput" placeholder="Account Number" required />
+      <button type="submit">Add / Update Customer</button>
+      <button type="button" onclick="clearCustomerForm()" style="background:#e67e22; margin-left: 10px;">Clear</button>
+    </form>
+
+    <table id="customerTable">
+      <thead>
+        <tr><th>Account No</th><th>Name</th><th>Address</th><th>Phone</th><th>Units</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        <!-- Customer rows go here -->
+      </tbody>
+    </table>
+  </div>
+
+  <div id="items" class="section" style="display:none;">
+    <h1>Item Management</h1>
+    <form id="itemForm" onsubmit="addOrUpdateItem(event)">
+      <input type="hidden" id="itemId" />
+      <input type="text" id="itemName" placeholder="Item Name" required />
+      <input type="number" id="itemPrice" placeholder="Price Per Unit" required min="0" step="0.01" />
+      <button type="submit">Add / Update Item</button>
+      <button type="button" onclick="clearItemForm()" style="background:#e67e22; margin-left: 10px;">Clear</button>
+    </form>
+
+    <table id="itemTable">
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Price</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        <!-- Item rows go here -->
+      </tbody>
+    </table>
+  </div>
+
+  <div id="bill" class="section" style="display:none;">
+   <h1>Generate Bill</h1>
+
+<form id="billForm" onsubmit="generateBill(event)">
+  <label>Customer:</label>
+  <select id="billCustomerSelect" required></select>
+
+  <h3>Add Items</h3>
+  <select id="billItemSelect"></select>
+  <input type="number" id="billItemQuantity" min="1" value="1" />
+  <button type="button" onclick="addBillItem()">Add Item</button>
+
+  <h3>Bill Items</h3>
+  <table id="billItemsTable" border="1" style="width:100%; margin-top:10px;">
+    <thead>
+      <tr>
+        <th>Item</th><th>Quantity</th><th>Unit Price</th><th>Subtotal</th><th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h3>Total: $<span id="billTotal">0.00</span></h3>
+  <button id="btnPrintReceipt" style="display:none; margin-top: 10px; background:#2ecc71; border:none; color:#fff; padding: 10px 20px; border-radius: 5px; cursor:pointer;">Print Receipt</button>
+
+  <button type="submit">Generate Bill</button>
+</form>
+<div id="billResult" style="margin-top:20px; font-weight: 600;"></div>
+
+
+  </div>
+
+<div id="history" class="section" style="display:none;">
+  <h1>Bill History</h1>
+  <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+    <thead>
+      <tr style="background: #f39c12; color: white;">
+        <th style="padding: 10px; border: 1px solid #ddd;">Account No</th>
+        <th style="padding: 10px; border: 1px solid #ddd;">Total (LKR)</th>
+        <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
+      </tr>
+    </thead>
+    <tbody id="billHistoryBody"></tbody>
+  </table>
+</div>
+
+  <div id="help" class="section" style="display:none;">
+    <h1>Help Section</h1>
+    <p>Use the sidebar to navigate between Customers, Items, Bill generation, and Help.</p>
+    <p>In Customers, add new accounts or edit existing ones.</p>
+    <p>In Items, manage items with prices.</p>
+    <p>Generate bills based on customer units and item price.</p>
+  </div>
+</div>
+<div id="printableReceipt" style="display:none; max-width: 400px; margin: 20px auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+  <div style="text-align: center; margin-bottom: 20px;">
+    <h2 style="margin: 0; color: #3498db;">Pahana Edu</h2>
+    <p style="font-size: 12px; color: #777;">123 Olkat Road, Colombo2, SriLanka</p>
+    <p style="font-size: 12px; color: #777;">Phone: +1234567890</p>
+  </div>
+
+  <div id="receiptCustomerInfo" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+    <!-- Customer info inserted here -->
+  </div>
+
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+    <thead>
+      <tr style="background: #3498db; color: white;">
+        <th style="padding: 8px; text-align: left;">Item</th>
+        <th style="padding: 8px; text-align: center;">Qty</th>
+        <th style="padding: 8px; text-align: right;">Unit Price</th>
+        <th style="padding: 8px; text-align: right;">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody id="receiptItems">
+      <!-- Bill items inserted here -->
+    </tbody>
+  </table>
+
+  <div style="text-align: right; font-weight: 700; font-size: 18px; border-top: 2px solid #3498db; padding-top: 10px;">
+    Total: $<span id="receiptTotal">0.00</span>
+  </div>
+
+  <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #777;">
+    Thank you come again🙂!
+  </div>
+</div>
+
+
+</body>
+</html>
