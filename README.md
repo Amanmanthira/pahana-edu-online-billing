@@ -34,7 +34,7 @@ Welcome to the official repository of the **Pahana Institute's Smart Billing & I
 | Backend       | Java Servlet (Jakarta EE) |
 | Database      | MySQL              |
 | Build Tool    | Apache Maven       |
-| Architecture  | MVC (Model-View-Controller) |
+| Architecture  | MVC-S (Model-View-Controller-Service) |
 
 ---
 
