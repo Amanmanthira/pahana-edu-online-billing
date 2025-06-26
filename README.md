@@ -30,7 +30,7 @@ Welcome to the official repository of the **Pahana EDU's Smart Billing & Invento
 
 | Layer         | Technology         |
 |---------------|--------------------|
-| Frontend      | HTML, Inline CSS, JavaScript |
+| Frontend      | HTML, CSS, JavaScript |
 | Backend       | Java Servlet (Jakarta EE) |
 | Database      | MySQL              |
 | Build Tool    | Apache Maven       |
