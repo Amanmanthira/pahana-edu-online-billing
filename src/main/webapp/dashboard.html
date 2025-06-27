@@ -18,7 +18,7 @@
   <div class="nav-item" onclick="showSection('customers', this)">👥 Customers</div>
   <div class="nav-item" onclick="showSection('items', this)">📦 Items</div>
   <div class="nav-item" onclick="showSection('bill', this)">🧾 Generate Bill</div>
-  <li class="nav-item" onclick="showSection('history', this)">Bill History</li>
+  <div class="nav-item" onclick="showSection('history', this)">Bill History</div>
   <div class="nav-item" onclick="showSection('help', this)">❓ Help</div>
 </div>
 
@@ -110,7 +110,24 @@
         <p id="totalBills" style="margin: 0; font-size: 28px; font-weight: bold;">0</p>
       </div>
     </div>
+    
+    
   </div>
+    
+<h2 style="color:#9b59b6; font-family:'Poppins', sans-serif; font-size:28px; margin-top:50px; margin-bottom:15px;">
+  📚 Featured Products
+</h2>
+
+<div id="productSlider" style="position:relative; overflow:hidden; padding:10px 50px; background:linear-gradient(to right, #fce4ec, #f8bbd0); border-radius:24px; box-shadow:0 8px 25px rgba(0,0,0,0.1);">
+  <button class="prev" onclick="slideProducts('left')" style="position:absolute; left:15px; top:50%; transform:translateY(-50%); background:#fff; color:#d63384; border:none; border-radius:50%; width:44px; height:44px; font-size:24px; font-weight:bold; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.1);">‹</button>
+
+  <div id="productSliderTrack" style="display:flex; gap:25px; transition:transform 0.4s ease; padding:25px 0;">
+    <!-- Cards added by JS -->
+  </div>
+
+  <button class="next" onclick="slideProducts('right')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); background:#fff; color:#d63384; border:none; border-radius:50%; width:44px; height:44px; font-size:24px; font-weight:bold; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.1);">›</button>
+</div>
+
 </div>
 
 
