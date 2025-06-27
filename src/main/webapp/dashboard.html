@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="Style.css" />
 <script src="index.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <title>📚 Pahana Edu Dashboard</title>
@@ -23,17 +24,23 @@
 </div>
 
 <div class="main-content">
-  <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: #f5f5f5; border-bottom: 2px solid #ddd;">
+  <div style="position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: #f5f5f5; border-bottom: 2px solid #ddd;">
   <div>
     <h1 style="margin: 0; font-size: 28px; color: #333;">Welcome Back, Admin 👋</h1>
     <p style="margin: 5px 0 0 0; font-size: 16px; color: #666;">Here’s what’s happening in your dashboard today.</p>
   </div>
+  
   <button 
     onclick="logout()" 
     style="background-color: #e74c3c; color: white; border: none; padding: 10px 18px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">
     Logout
   </button>
+
+  <!-- Walking Boy -->
+  <img src="boy.gif" alt="Walking Boy" id="walkingBoy"
+    style="position: absolute; bottom: 10px; left: -150px; height: 85px; z-index: 1;">
 </div>
+
 
     
     <!-- Font Awesome for icons -->
@@ -45,71 +52,69 @@
   </h2>
 
   <div style="display: flex; flex-wrap: wrap; gap: 25px;">
-    <!-- Total Customers -->
-    <div style="
-      flex: 1;
-      min-width: 250px;
-      background: linear-gradient(135deg, #3498db, #2980b9);
-      color: white;
-      padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-      display: flex;
-      align-items: center;
-      transition: all 0.3s ease;
-    ">
-      <div style="font-size: 36px; margin-right: 20px;">
-        <i class="fas fa-users"></i>
-      </div>
-      <div>
-        <h3 style="margin: 0 0 5px 0; font-size: 18px;">Total Customers</h3>
-        <p id="totalCustomers" style="margin: 0; font-size: 28px; font-weight: bold;">0</p>
-      </div>
-    </div>
+ <!-- Total Customers -->
+<div style="
+  flex: 1;
+  min-width: 250px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  padding: 15px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+">
+  <img src="scate.gif" alt="Skating Boy" style="height: 150px; margin-right: 2px;">
+  <div>
+    <h3 style="margin: 0; font-size: 20px; font-weight: 500; opacity: 0.85;">Total Customers</h3>
+    <p id="totalCustomers" style="margin: 5px 0 0 0; font-size: 32px; font-weight: 700;">0</p>
+  </div>
+</div>
 
-    <!-- Total Items -->
-    <div style="
-      flex: 1;
-      min-width: 250px;
-      background: linear-gradient(135deg, #2ecc71, #27ae60);
-      color: white;
-      padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-      display: flex;
-      align-items: center;
-      transition: all 0.3s ease;
-    ">
-      <div style="font-size: 36px; margin-right: 20px;">
-        <i class="fas fa-box-open"></i>
-      </div>
-      <div>
-        <h3 style="margin: 0 0 5px 0; font-size: 18px;">Total Items</h3>
-        <p id="totalItems" style="margin: 0; font-size: 28px; font-weight: bold;">0</p>
-      </div>
-    </div>
+<!-- Total Items -->
+<div style="
+  flex: 1;
+  min-width: 250px;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+  padding: 15px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+">
+  <img src="book.gif" alt="Book" style="height: 150px; margin-right: 2px;">
+  <div>
+    <h3 style="margin: 0; font-size: 20px; font-weight: 500; opacity: 0.85;">Total Items</h3>
+    <p id="totalItems" style="margin: 5px 0 0 0; font-size: 32px; font-weight: 700;">0</p>
+  </div>
+</div>
 
-    <!-- Total Bills -->
-    <div style="
-      flex: 1;
-      min-width: 250px;
-      background: linear-gradient(135deg, #e67e22, #d35400);
-      color: white;
-      padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-      display: flex;
-      align-items: center;
-      transition: all 0.3s ease;
-    ">
-      <div style="font-size: 36px; margin-right: 20px;">
-        <i class="fas fa-receipt"></i>
-      </div>
-      <div>
-        <h3 style="margin: 0 0 5px 0; font-size: 18px;">Total Bills (LKR)</h3>
-        <p id="totalBills" style="margin: 0; font-size: 28px; font-weight: bold;">0</p>
-      </div>
-    </div>
+<!-- Total Bills -->
+<div style="
+  flex: 1;
+  min-width: 250px;
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  color: white;
+  padding: 15px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+">
+  <img src="money.gif" alt="Money" style="height: 150px; margin-right: 2px;">
+  <div>
+    <h3 style="margin: 0; font-size: 20px; font-weight: 500; opacity: 0.85;">Total Bills (LKR)</h3>
+    <p id="totalBills" style="margin: 5px 0 0 0; font-size: 32px; font-weight: 700;">0</p>
+  </div>
+</div>
+
     
     
   </div>
@@ -265,4 +270,20 @@
 
 
 </body>
+<script>
+let boy = document.getElementById('walkingBoy');
+let position = -150;
+
+function moveBoy() {
+  position += 1; // speed of walking
+  if (position > window.innerWidth) {
+    position = -150; // reset to left outside screen
+  }
+  boy.style.left = position + 'px';
+  requestAnimationFrame(moveBoy); // smooth frame loop
+}
+
+moveBoy(); // start animation
+</script>
+
 </html>
