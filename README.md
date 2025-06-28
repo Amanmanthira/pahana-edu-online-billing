@@ -40,7 +40,9 @@ Welcome to the official repository of the **Pahana EDU's Smart Billing & Invento
 
 ## 📸 UI Snapshots
 
-> *(Add screenshots after deployment to showcase your dashboard)*
+https://github.com/user-attachments/assets/64028d76-4354-4db1-89a6-3e3336e1ee85
+
+
 
 ---
 
