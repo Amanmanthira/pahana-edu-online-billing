@@ -549,42 +549,115 @@ async function downloadReceipt() {
 
 function showSection(section, el) {
   document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-  document.getElementById(section).style.display = 'block';
+
+  const targetSection = document.getElementById(section);
+  if (!targetSection) {
+    console.error(`Section "${section}" not found in DOM.`);
+    return;
+  }
+
+  targetSection.style.display = 'block';
 
   document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-  el.classList.add('active');
+  if (el) el.classList.add('active');
 
   if (section === 'customers') loadCustomers();
   if (section === 'items') loadItems();
   if (section === 'bill') {
     clearBillForm();
-    populateBillDropdowns(); // ← ADD THIS LINE
+    populateBillDropdowns();
   }
-    if (section === 'analytics') loadAnalytics();
-    if (section === 'history') loadHistory();  
-
-
+  if (section === 'analytics') loadAnalytics();
+  if (section === 'history') loadHistory();
 }
+
+
 async function loadAnalytics() {
   try {
-    // Customers
+    // Fetch data as before ...
     const customerRes = await fetch(baseURL + '/CustomerServlet');
     const customers = await customerRes.json();
     document.getElementById('totalCustomers').textContent = customers.length;
 
-    // Items
     const itemRes = await fetch(baseURL + '/ItemServlet');
     const items = await itemRes.json();
     document.getElementById('totalItems').textContent = items.length;
 
-    // Bills summary from BillServlet?summary=true
     const billRes = await fetch(baseURL + '/BillServlet?summary=true');
     const summary = await billRes.json();
     document.getElementById('totalBills').textContent = summary.totalBills;
+
+    // Load products for slider
+    const track = document.getElementById('productSliderTrack');
+    track.innerHTML = '';
+
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.style = `
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        width: 200px;
+        flex-shrink: 0;
+        text-align: center;
+        padding: 20px 15px;
+        font-family: 'Poppins', sans-serif;
+        cursor: pointer;
+        margin-right: 20px;
+        transition: transform 0.3s ease;
+      `;
+      card.innerHTML = `
+        <div style="width:100%; height:140px; background:#ffe6f0; border-radius:16px; margin-bottom:15px; display:flex; align-items:center; justify-content:center;">
+          <i class="fas fa-box" style="font-size:50px; color:#e91e63;"></i>
+        </div>
+        <div style="font-size:18px; font-weight:600; color:#333;">${item.name}</div>
+        <div style="font-size:16px; color:#888;">LKR ${item.price.toFixed(2)}</div>
+      `;
+      track.appendChild(card);
+    });
+
+    // Slider controls & auto-slide
+    let index = 0;
+    const slider = document.getElementById('productSlider');
+    const cardWidth = 220; // card width + margin-right approx
+    const visibleCards = Math.floor(slider.offsetWidth / cardWidth);
+    const maxIndex = Math.max(0, items.length - visibleCards);
+
+    function updateSlider() {
+      track.style.transform = `translateX(-${index * cardWidth}px)`;
+    }
+
+    document.querySelector('#productSlider button.prev').onclick = () => {
+      index = (index === 0) ? maxIndex : index - 1;
+      updateSlider();
+      resetAutoSlide();
+    };
+
+    document.querySelector('#productSlider button.next').onclick = () => {
+      index = (index === maxIndex) ? 0 : index + 1;
+      updateSlider();
+      resetAutoSlide();
+    };
+
+    // Auto slide every 3 seconds
+    let autoSlideInterval = setInterval(() => {
+      index = (index === maxIndex) ? 0 : index + 1;
+      updateSlider();
+    }, 3000);
+
+    function resetAutoSlide() {
+      clearInterval(autoSlideInterval);
+      autoSlideInterval = setInterval(() => {
+        index = (index === maxIndex) ? 0 : index + 1;
+        updateSlider();
+      }, 3000);
+    }
+
   } catch (err) {
     alert('Failed to load analytics: ' + err.message);
   }
 }
+
 
 
 async function loadHistory() {
