@@ -142,16 +142,29 @@
 
   <div id="customers" class="section">
     <h1>Customer Management</h1>
-    <form id="customerForm" onsubmit="addOrUpdateCustomer(event)">
-      <input type="hidden" id="customerAccountNo" />
-      <input type="text" id="customerName" placeholder="Name" required />
-      <input type="text" id="customerAddress" placeholder="Address" required />
-      <input type="text" id="customerPhone" placeholder="Phone" required />
-      <input type="number" id="customerUnits" placeholder="Units Consumed" required min="0" />
-      <input type="text" id="customerAccountNoInput" placeholder="Account Number" required />
-      <button type="submit">Add / Update Customer</button>
-      <button type="button" onclick="clearCustomerForm()" style="background:#e67e22; margin-left: 10px;">Clear</button>
-    </form>
+<div style="display: flex; align-items: flex-start; justify-content: space-between; background-color: #eaf6fb; padding: 40px; border-radius: 20px; margin-top: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); font-family: 'Poppins', sans-serif;">
+
+  <form id="customerForm" onsubmit="addOrUpdateCustomer(event)" style="flex: 1; max-width: 500px; display: flex; flex-direction: column; gap: 15px;">
+    <input type="hidden" id="customerAccountNo" />
+    <input type="text" id="customerName" placeholder="Name" required style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
+    <input type="text" id="customerAddress" placeholder="Address" required style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
+    <input type="text" id="customerPhone" placeholder="Phone" required style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
+    <input type="number" id="customerUnits" placeholder="Units Consumed" required min="0" style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
+    <input type="text" id="customerAccountNoInput" placeholder="Account Number" required style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
+
+    <div style="display: flex; gap: 10px;">
+      <button type="submit" style="background-color: #48b0f7; color: white; padding: 12px 20px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer;">Add / Update Customer</button>
+      <button type="button" onclick="clearCustomerForm()" style="background-color: #2ea3d3; color: white; padding: 12px 20px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer;">Clear</button>
+    </div>
+  </form>
+
+  <!-- 🧍 3D Animation -->
+  <img src="customer.gif" alt="Cute 3D Character" style="height: 550px; margin-left: 60px; object-fit: contain;" />
+
+</div>
+
+
+
 
     <table id="customerTable">
       <thead>
