@@ -1,4 +1,4 @@
- const baseURL = 'http://localhost:8080/mavenproject2-1.0-SNAPSHOT';
+const baseURL = 'http://localhost:8080/mavenproject2-1.0-SNAPSHOT';
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -370,7 +370,6 @@ async function generateBill(e) {
   }
 
   try {
-    // Prepare data - array of {itemId, quantity}
     const itemsData = billItems.map(i => ({ itemId: i.id, quantity: i.quantity }));
 
     const res = await fetch(baseURL + '/BillServlet', {
@@ -385,7 +384,6 @@ async function generateBill(e) {
     if (!res.ok) throw new Error('Failed to generate bill');
     const data = await res.json();
 
-    // Show summary - you can customize based on your backend response
     document.getElementById('billResult').innerHTML = `
       <p><strong>Customer:</strong> ${data.name}</p>
       <p><strong>Items:</strong></p>
@@ -395,16 +393,56 @@ async function generateBill(e) {
       <p><strong>Total:</strong> $${data.total.toFixed(2)}</p>
     `;
 
+    // Show receipt for printing
+    const receiptDiv = document.getElementById('printableReceipt');
+    const receiptCustomerInfo = document.getElementById('receiptCustomerInfo');
+    const receiptItems = document.getElementById('receiptItems');
+    const receiptTotal = document.getElementById('receiptTotal');
+
+    // Fill receipt info
+    receiptCustomerInfo.innerHTML = `
+      <p><strong>Name:</strong> ${data.name}</p>
+      <p><strong>Account No:</strong> ${data.accountNo}</p>
+      <p><strong>Address:</strong> ${data.address}</p>
+      <p><strong>Phone:</strong> ${data.phone}</p>
+    `;
+
+    receiptItems.innerHTML = data.items.map(it => `
+      <tr>
+        <td style="padding: 8px;">${it.name}</td>
+        <td style="padding: 8px; text-align: center;">${it.quantity}</td>
+        <td style="padding: 8px; text-align: right;">$${it.unitPrice.toFixed(2)}</td>
+        <td style="padding: 8px; text-align: right;">$${it.subtotal.toFixed(2)}</td>
+      </tr>
+    `).join('');
+
+    receiptTotal.textContent = data.total.toFixed(2);
+    receiptDiv.style.display = 'block';
+
+    // Print
+    const win = window.open('', 'Print-Receipt');
+    win.document.write('<html><head><title>Print</title></head><body>');
+    win.document.write(receiptDiv.innerHTML);
+    win.document.write('</body></html>');
+    win.document.close();
+    win.print();
+
     // Reset form
     billItems = [];
     renderBillItemsTable();
     updateBillTotal();
     clearBillForm();
 
+    // ✅ Call post billing flow only in auto mode
+    if (isCustomerMode) {
+      handlePostBillingFlow();
+    }
+
   } catch (err) {
     alert(err.message);
   }
 }
+
 async function generateBill(e) {
   e.preventDefault();
   const accountNo = document.getElementById('billCustomerSelect').value;
@@ -493,37 +531,45 @@ document.addEventListener("DOMContentLoaded", () => {
   const printBtn = document.getElementById('btnPrintReceipt');
   if (printBtn) {
     printBtn.addEventListener('click', async () => {
-      try {
-        const accountNo = document.getElementById('billCustomerSelect').value;
-        if (!accountNo) {
-          alert('Select a customer first');
-          return;
-        }
+  try {
+    const accountNo = document.getElementById('billCustomerSelect').value;
+    if (!accountNo) {
+      alert('Select a customer first');
+      return;
+    }
 
-        const itemsToSave = billItems.map(item => ({
-          itemId: item.id,
-          quantity: item.quantity
-        }));
+    const itemsToSave = billItems.map(item => ({
+      itemId: item.id,
+      quantity: item.quantity
+    }));
 
-        if (itemsToSave.length === 0) {
-          alert('Add items to the bill before printing');
-          return;
-        }
+    if (itemsToSave.length === 0) {
+      alert('Add items to the bill before printing');
+      return;
+    }
 
-        const saveRes = await fetch(baseURL + '/BillServlet', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ accountNo, items: itemsToSave })
-        });
-
-        if (!saveRes.ok) throw new Error('Failed to save bill to database');
-
-        downloadReceipt();
-        alert('Bill saved and receipt downloaded!');
-      } catch (err) {
-        alert('Error: ' + err.message);
-      }
+    // Save bill to DB
+    const saveRes = await fetch(baseURL + '/BillServlet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ accountNo, items: itemsToSave })
     });
+
+    if (!saveRes.ok) throw new Error('Failed to save bill to database');
+
+    // Download receipt PDF
+    await downloadReceipt();
+
+    // ✅ Start post billing flow for next customer
+    if (isCustomerMode) {
+      handlePostBillingFlow(); // show 10s timer + ask for next customer
+    }
+
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
+});
+
   }
 });
 
@@ -682,6 +728,74 @@ async function loadHistory() {
   }
 }
 
+function fetchUsers() {
+  fetch("UserServlet")
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.querySelector("#userTable tbody");
+      tbody.innerHTML = "";
+      data.forEach(user => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${user.username}</td>
+          <td>${user.password}</td>
+          <td>${user.userRole}</td>
+          <td>
+            <button onclick='editUser("${user.username}", "${user.password}", "${user.userRole}")'>✏️ Edit</button>
+            <button onclick='deleteUser("${user.username}")'>🗑️ Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    });
+}
 
+function addOrUpdateUser(e) {
+  e.preventDefault();
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const userRole = document.getElementById("userRole").value;
+
+  const formData = `username=${username}&password=${password}&userRole=${userRole}`;
+
+  fetch("UserServlet", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: formData
+  }).then(() => {
+    fetchUsers();
+    clearUserForm();
+    alert("User saved successfully");
+  });
+}
+
+function deleteUser(username) {
+  if (!confirm("Are you sure to delete this user?")) return;
+  fetch("UserServlet?username=" + username, { method: "DELETE" })
+    .then(res => {
+      if (res.ok) {
+        fetchUsers();
+        alert("User deleted.");
+      } else {
+        alert("User not found");
+      }
+    });
+}
+
+function editUser(username, password, role) {
+  document.getElementById("username").value = username;
+  document.getElementById("password").value = password;
+  document.getElementById("userRole").value = role;
+}
+
+function clearUserForm() {
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+  document.getElementById("userRole").value = "";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetchUsers();
+});
   // Load customers on start
   showSection('customers', document.querySelector('.nav-item'));

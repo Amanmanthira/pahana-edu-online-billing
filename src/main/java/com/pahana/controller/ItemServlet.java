@@ -25,6 +25,7 @@ public class ItemServlet extends HttpServlet {
         } catch (Exception e) { res.sendError(500, e.getMessage()); }
     }
 
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String name = req.getParameter("name");
         double price = Double.parseDouble(req.getParameter("price"));

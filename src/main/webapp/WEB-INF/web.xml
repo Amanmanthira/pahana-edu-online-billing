@@ -24,6 +24,10 @@
         <servlet-name>RegisterServlet1</servlet-name>
         <servlet-class>com.pahana.controller.RegisterServlet1</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UserServlet</servlet-name>
+        <servlet-class>com.pahana.controller.UserServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AuthServlet</servlet-name>
         <url-pattern>/AuthServlet</url-pattern>
@@ -47,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>RegisterServlet1</servlet-name>
         <url-pattern>/RegisterServlet1</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserServlet</servlet-name>
+        <url-pattern>/UserServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

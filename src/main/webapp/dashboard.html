@@ -18,6 +18,7 @@
 <h2 class="typing-text"><span id="typed-text"></span><span class="cursor">|</span></h2>
   <div class="nav-item active" onclick="showSection('analytics', this)">📊 Analytics</div>
   <div class="nav-item" onclick="showSection('customers', this)">👥 Customers</div>
+  <div class="nav-item" onclick="showSection('users', this)">👤 Users</div>
   <div class="nav-item" onclick="showSection('items', this)">📦 Items</div>
   <div class="nav-item" onclick="showSection('bill', this)">? Generate Bill</div>
   <div class="nav-item" onclick="showSection('history', this)">💳Bill History</div>
@@ -177,6 +178,34 @@
       </tbody>
     </table>
   </div>
+
+
+<div id="users" class="section" style="display:none;">
+  <h1>Manage Users</h1>
+  <form id="userForm" onsubmit="addOrUpdateUser(event)" style="background:#f7f7f7;padding:20px;border-radius:10px;margin-bottom:20px;">
+    <input type="text" id="username" placeholder="Username" required style="padding:10px;margin:5px;" />
+    <input type="password" id="password" placeholder="Password" required style="padding:10px;margin:5px;" />
+    <select id="userRole" required style="padding:10px;margin:5px;">
+      <option value="">Select Role</option>
+      <option value="admin">Admin</option>
+      <option value="cashier">Cashier</option>
+    </select>
+    <button type="submit" style="padding:10px 20px;margin:5px;background:#27ae60;color:white;border:none;">Add / Update</button>
+    <button type="button" onclick="clearUserForm()" style="padding:10px 20px;margin:5px;background:#e67e22;color:white;border:none;">Clear</button>
+  </form>
+
+  <table id="userTable" style="width:100%;border-collapse:collapse;">
+    <thead style="background:#2980b9;color:white;">
+      <tr>
+        <th style="padding:10px;">Username</th>
+        <th style="padding:10px;">Password</th>
+        <th style="padding:10px;">Role</th>
+        <th style="padding:10px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
 
   <div id="items" class="section" style="display:none;">
     <h1>Item Management</h1>
