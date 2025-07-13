@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>📦 Stock Keeper Dashboard - Pahana Edu</title>
+  <link rel="stylesheet" href="Style.css" />
+  <script src="index.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sortablejs/1.15.0/Sortable.min.js"></script>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2 class="typing-text"><span id="typed-text"></span><span class="cursor">|</span></h2>
+    <div class="nav-item active" onclick="showSection('dashboard', this)">📊 Dashboard</div>
+    <div class="nav-item active" onclick="showSection('items', this)">📦 Items</div>
+    <div class="nav-item" onclick="logout()">🔒 Logout</div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Header -->
+    <div style="position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: #f5f5f5; border-bottom: 2px solid #ddd;">
+      <div>
+        <h1 id="welcomeUser" style="margin: 0; font-size: 26px; color: #2c3e50;"></h1>
+        <p style="margin: 5px 0 0 0; font-size: 16px; color: #666;">You're viewing your stock dashboard.</p>
+      </div>
+      <img src="boy.gif" alt="Walking Boy" id="walkingBoy" style="position: absolute; bottom: 10px; left: -150px; height: 85px; z-index: 1;" />
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="section" style="display: none;">
+      <h1 style="font-size: 28px; font-weight: bold; margin-bottom: 30px; color: #2c3e50;">
+        📊 Stock Keeper Dashboard
+      </h1>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 20px; font-family: 'Poppins', sans-serif;">
+        <!-- Total Items -->
+        <div id="analytics-card" style="
+          flex: 1;
+          min-width: 250px;
+          background: linear-gradient(135deg, #2ecc71, #27ae60);
+          color: white;
+          padding: 15px;
+          border-radius: 16px;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+          display: flex;
+          align-items: center;
+          font-family: 'Poppins', sans-serif;
+          transition: all 0.3s ease;
+        ">
+          <img src="book.gif" alt="Book" style="height: 150px; margin-right: 2px;">
+          <div>
+            <h3 style="margin: 0; font-size: 20px; font-weight: 500; opacity: 0.85;">Total Items</h3>
+            <p id="totalItems" style="margin: 5px 0 0 0; font-size: 32px; font-weight: 700;">0</p>
+          </div>
+        </div>
+
+        <!-- Low Stock Items -->
+        <div style="flex: 1; min-width: 250px; background: #e74c3c; color: white; padding: 20px; border-radius: 12px;">
+          <h3>Low Stock Items</h3>
+          <p id="dashLowStock" style="font-size: 32px; font-weight: bold;">0</p>
+        </div>
+
+        <!-- Out of Stock -->
+        <div style="flex: 1; min-width: 250px; background: #f39c12; color: white; padding: 20px; border-radius: 12px;">
+          <h3>Out of Stock</h3>
+          <p id="dashOutOfStock" style="font-size: 32px; font-weight: bold;">0</p>
+        </div>
+        
+  
+
+      </div>
+              <!-- Low Stock Products List -->
+<div id="lowStockListContainer" style="margin-top: 20px; min-width: 250px; background: #fce4e4; border-radius: 12px; padding: 15px; color: #c0392b; font-family: 'Poppins', sans-serif;">
+  <h3>Low Stock Products:</h3>
+  <ul id="lowStockList" style="margin: 0; padding-left: 20px; max-height: 150px; overflow-y: auto;"></ul>
+</div>
+    </div>
+
+    <!-- Items Section Only -->
+    <div id="items" class="section">
+      <h1>📦 Item Management</h1>
+      <form id="itemForm" onsubmit="addOrUpdateItem(event)">
+        <input type="hidden" id="itemId" />
+        <input type="text" id="itemName" placeholder="Item Name" required />
+        <input type="number" id="itemPrice" placeholder="Price Per Unit" required min="0" step="0.01" />
+        <input type="number" id="itemQuantity" placeholder="Quantity" required min="0" step="1" />
+        <button type="submit">Add / Update Item</button>
+        <button type="button" onclick="clearItemForm()" style="background:#e67e22; margin-left: 10px;">Clear</button>
+      </form>
+
+      <table id="itemTable">
+        <thead>
+          <tr>
+            <th>ID</th><th>Name</th><th>Price</th><th>Quantity</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Item rows go here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Welcome Message
+    const name = sessionStorage.getItem("username") || "Stock Keeper";
+    const role = sessionStorage.getItem("role") || "Stock Keeper";
+    document.getElementById("welcomeUser").textContent = `Welcome Back, ${name} (${role}) 👋`;
+
+    // Show 'items' section by default for Stock Keeper role
+    if (role === "Stock Keeper") {
+      showSection("items", document.querySelector(".nav-item"));
+    }
+
+    // Walking animation for boy.gif
+    const boy = document.getElementById('walkingBoy');
+    let position = -150;
+
+    function moveBoy() {
+      position += 1; // speed of walking
+      if (position > window.innerWidth) {
+        position = -150; // reset to left outside screen
+      }
+      boy.style.left = position + 'px';
+      requestAnimationFrame(moveBoy); // smooth frame loop
+    }
+
+    moveBoy(); // start animation
+
+    let items = [];
+    let editingIndex = -1;
+
+    function addOrUpdateItem(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("itemName").value;
+      const price = parseFloat(document.getElementById("itemPrice").value);
+      const qty = parseInt(document.getElementById("itemQuantity").value);
+
+      if (editingIndex >= 0) {
+        items[editingIndex] = { id: editingIndex + 1, name, price, qty };
+        editingIndex = -1;
+      } else {
+        const id = items.length + 1;
+        items.push({ id, name, price, qty });
+      }
+
+      renderItemTable();
+      clearItemForm();
+    }
+
+    function renderItemTable() {
+      const tbody = document.querySelector("#itemTable tbody");
+      tbody.innerHTML = "";
+
+      items.forEach((item, index) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.name}</td>
+          <td>${item.price.toFixed(2)}</td>
+          <td>${item.qty}</td>
+          <td>
+            <button onclick="editItem(${index})">Edit</button>
+            <button onclick="deleteItem(${index})" style="background:#e74c3c;">Delete</button>
+          </td>
+        `;
+
+        tbody.appendChild(row);
+      });
+
+      updateDashboard(); // 🔁 Update stats
+    }
+
+    function editItem(index) {
+      const item = items[index];
+      document.getElementById("itemName").value = item.name;
+      document.getElementById("itemPrice").value = item.price;
+      document.getElementById("itemQuantity").value = item.qty;
+      editingIndex = index;
+    }
+
+    function deleteItem(index) {
+      items.splice(index, 1);
+      renderItemTable();
+    }
+
+    function clearItemForm() {
+      document.getElementById("itemForm").reset();
+      editingIndex = -1;
+    }
+
+    // Dashboard update
+function updateDashboard() {
+  const total = items.length;
+  const lowStockItems = items.filter(i => i.qty > 0 && i.qty <= 10);
+  const lowStockCount = lowStockItems.length;
+  const outOfStockCount = items.filter(i => i.qty === 0).length;
+
+  document.getElementById("totalItems").textContent = total;
+  document.getElementById("dashLowStock").textContent = lowStockCount;
+  document.getElementById("dashOutOfStock").textContent = outOfStockCount;
+
+  // Update Low Stock Products list
+  const lowStockListEl = document.getElementById("lowStockList");
+  lowStockListEl.innerHTML = ""; // clear previous
+
+  if (lowStockCount === 0) {
+    const li = document.createElement("li");
+    li.textContent = "No low stock products.";
+    lowStockListEl.appendChild(li);
+  } else {
+    lowStockItems.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name} (Qty: ${item.qty})`;
+      lowStockListEl.appendChild(li);
+    });
+  }
+}
+
+
+
+    // Show section function (assuming you have it defined somewhere)
+    function showSection(id, element) {
+      document.querySelectorAll('.section').forEach(sec => {
+        sec.style.display = 'none';
+      });
+      document.getElementById(id).style.display = 'block';
+
+      // Manage active nav-item classes
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+      if(element) element.classList.add('active');
+    }
+
+    // Show dashboard on load by default
+    showSection('dashboard');
+
+async function loadItemsFromServer() {
+  try {
+    const response = await fetch('http://localhost:8080/mavenproject2-1.0-SNAPSHOT/ItemServlet');
+    if (!response.ok) throw new Error('Network error');
+    const serverItems = await response.json();
+
+    // Map server data to your local array format (id, name, price, qty)
+    items = serverItems.map(item => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      qty: item.quantity  
+    }));
+
+    renderItemTable(); 
+  } catch (error) {
+    console.error('Failed to load items:', error);
+  }
+}
+
+// Call this once page loads, or when you want to refresh
+loadItemsFromServer();
+
+  </script>
+
+</body>
+</html>

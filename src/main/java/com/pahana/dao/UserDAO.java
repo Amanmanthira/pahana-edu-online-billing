@@ -18,7 +18,7 @@ public class UserDAO {
 
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
-            user.setUserRole(rs.getString("userRole")); // Set role if exists
+user.setUserRole(rs.getString("userRole")); 
             return true;
         }
         return false;

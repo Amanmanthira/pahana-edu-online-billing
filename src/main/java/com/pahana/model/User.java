@@ -27,4 +27,9 @@ public class User {
     public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
     public void setUserRole(String userRole) { this.userRole = userRole; }
+
+    public String getRole() {
+    return userRole;
+}
+
 }
