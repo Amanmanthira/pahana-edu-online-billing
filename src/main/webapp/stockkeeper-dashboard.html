@@ -78,6 +78,14 @@
   <h3>Low Stock Products:</h3>
   <ul id="lowStockList" style="margin: 0; padding-left: 20px; max-height: 150px; overflow-y: auto;"></ul>
 </div>
+              
+              <div style="margin-top:30px; padding:20px; border:1px solid #ccc; border-radius:10px;">
+  <h3>📡 Send Real-time Message to Team</h3>
+  <div id="chatMessages" style="background:#f9f9f9; padding:10px; height:150px; overflow-y:auto; border:1px solid #ddd; border-radius:8px;"></div>
+  <input id="chatInput" type="text" placeholder="Type a message..." style="width:80%; padding:10px; margin-top:10px;" />
+  <button onclick="sendChatMessage()" style="padding:10px 20px; background:#3498db; color:white; border:none; border-radius:5px;">Send</button>
+</div>
+
     </div>
 
     <!-- Items Section Only -->
@@ -262,6 +270,44 @@ async function loadItemsFromServer() {
 
 // Call this once page loads, or when you want to refresh
 loadItemsFromServer();
+
+
+const socket = new WebSocket("ws://localhost:8080/mavenproject2-1.0-SNAPSHOT/teamchat");
+
+// Get username and role from sessionStorage
+  const userName = sessionStorage.getItem("username") || "Unknown";
+  const userRole = sessionStorage.getItem("role") || "Guest";
+  
+  
+// When connected
+socket.onopen = () => {
+  console.log("✅ WebSocket connected");
+};
+
+// When message received
+socket.onmessage = (event) => {
+  const chatBox = document.getElementById("chatMessages");
+  chatBox.innerHTML += `<p>${event.data}</p>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+};
+
+
+// Send message
+function sendChatMessage() {
+  const input = document.getElementById("chatInput");
+  const message = input.value.trim();
+  if (message && socket.readyState === WebSocket.OPEN) {
+    const formatted = `<strong>${userName} (${userRole}):</strong> ${message}`;
+    socket.send(formatted);
+
+    // Add message locally so you can see your own message immediately
+    const chatBox = document.getElementById("chatMessages");
+    chatBox.innerHTML += `<p>${formatted}</p>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    input.value = '';
+  }
+}
 
   </script>
 
