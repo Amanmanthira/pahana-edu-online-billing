@@ -154,62 +154,67 @@ function clearItemForm() {
   document.getElementById('itemId').value = '';
   document.getElementById('itemName').value = '';
   document.getElementById('itemPrice').value = '';
+  document.getElementById('itemQuantity').value = ''; // ✅
 }
+
 
   // --- Items ---
   async function loadItems() {
-    try {
-      const res = await fetch(baseURL + '/ItemServlet');
-      if (!res.ok) throw new Error('Failed to fetch items');
-      const items = await res.json();
+  try {
+    const res = await fetch(baseURL + '/ItemServlet');
+    if (!res.ok) throw new Error('Failed to fetch items');
+    const items = await res.json();
 
-      const tbody = document.querySelector('#itemTable tbody');
-      tbody.innerHTML = '';
-      items.forEach(i => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${i.id}</td>
-          <td>${i.name}</td>
-          <td>${i.price.toFixed(2)}</td>
-          <td>
-            <button onclick="editItem(${i.id})">Edit</button>
-            <button onclick="deleteItem(${i.id})">Delete</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-      clearItemForm();
-    } catch (err) {
-      alert(err.message);
-    }
+    const tbody = document.querySelector('#itemTable tbody');
+    tbody.innerHTML = '';
+    items.forEach(i => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${i.id}</td>
+        <td>${i.name}</td>
+        <td>${i.price.toFixed(2)}</td>
+        <td>${i.quantity}</td> <!-- ✅ Show quantity -->
+        <td>
+          <button onclick="editItem(${i.id})">Edit</button>
+          <button onclick="deleteItem(${i.id})">Delete</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+    clearItemForm();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+async function addOrUpdateItem(e) {
+  e.preventDefault();
+  const id = document.getElementById('itemId').value;
+  const name = document.getElementById('itemName').value.trim();
+  const price = parseFloat(document.getElementById('itemPrice').value);
+  const quantity = parseInt(document.getElementById('itemQuantity').value); // ✅
+
+  if (!name || isNaN(price) || isNaN(quantity)) {
+    alert('Please fill all fields correctly');
+    return;
   }
 
-  async function addOrUpdateItem(e) {
-    e.preventDefault();
-    const id = document.getElementById('itemId').value;
-    const name = document.getElementById('itemName').value.trim();
-    const price = parseFloat(document.getElementById('itemPrice').value);
+  const itemData = `name=${encodeURIComponent(name)}&price=${price}&quantity=${quantity}`; // ✅
 
-    if (!name || isNaN(price)) {
-      alert('Please fill all fields');
-      return;
-    }
-
-    const itemData = `name=${encodeURIComponent(name)}&price=${price}`;
-
-    try {
-      const res = await fetch(baseURL + '/ItemServlet' + (id ? `?id=${id}` : ''), {
-        method: id ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: itemData
-      });
-      if (!res.ok) throw new Error(await res.text());
-      alert(id ? 'Item updated' : 'Item added');
-      loadItems();
-    } catch (err) {
-      alert('Error: ' + err.message);
-    }
+  try {
+    const res = await fetch(baseURL + '/ItemServlet' + (id ? `?id=${id}` : ''), {
+      method: id ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: itemData
+    });
+    if (!res.ok) throw new Error(await res.text());
+    alert(id ? 'Item updated' : 'Item added');
+    loadItems();
+  } catch (err) {
+    alert('Error: ' + err.message);
   }
+}
+
 
   async function editItem(id) {
   try {
@@ -218,15 +223,17 @@ function clearItemForm() {
     const data = await res.json();
 
     if (data.length === 0) throw new Error('No item returned');
-    const i = data[0]; // Get the first item in the array
+    const i = data[0];
 
     document.getElementById('itemId').value = i.id;
     document.getElementById('itemName').value = i.name;
     document.getElementById('itemPrice').value = i.price;
+    document.getElementById('itemQuantity').value = i.quantity; // ✅
   } catch (err) {
     alert(err.message);
   }
 }
+
 
 
   async function deleteItem(id) {
