@@ -8,14 +8,16 @@
   <script src="index.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sortablejs/1.15.0/Sortable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
   <!-- Sidebar -->
   <div class="sidebar">
     <h2 class="typing-text"><span id="typed-text"></span><span class="cursor">|</span></h2>
-    <div class="nav-item active" onclick="showSection('dashboard', this)">📊 Dashboard</div>
-    <div class="nav-item active" onclick="showSection('items', this)">📦 Items</div>
+    <div class="nav-item" onclick="showSection('dashboard', this)">📊 Dashboard</div>
+    <div class="nav-item" onclick="showSection('items', this)">📦 Items</div>
+    <div class="nav-item" onclick="showSection('teamchat', this)">💬 Team Chat</div>
     <div class="nav-item" onclick="logout()">🔒 Logout</div>
   </div>
 
@@ -69,27 +71,34 @@
           <h3>Out of Stock</h3>
           <p id="dashOutOfStock" style="font-size: 32px; font-weight: bold;">0</p>
         </div>
-        
-  
-
       </div>
-              <!-- Low Stock Products List -->
-<div id="lowStockListContainer" style="margin-top: 20px; min-width: 250px; background: #fce4e4; border-radius: 12px; padding: 15px; color: #c0392b; font-family: 'Poppins', sans-serif;">
-  <h3>Low Stock Products:</h3>
-  <ul id="lowStockList" style="margin: 0; padding-left: 20px; max-height: 150px; overflow-y: auto;"></ul>
-</div>
-              
-              <div style="margin-top:30px; padding:20px; border:1px solid #ccc; border-radius:10px;">
-  <h3>📡 Send Real-time Message to Team</h3>
-  <div id="chatMessages" style="background:#f9f9f9; padding:10px; height:150px; overflow-y:auto; border:1px solid #ddd; border-radius:8px;"></div>
-  <input id="chatInput" type="text" placeholder="Type a message..." style="width:80%; padding:10px; margin-top:10px;" />
-  <button onclick="sendChatMessage()" style="padding:10px 20px; background:#3498db; color:white; border:none; border-radius:5px;">Send</button>
-</div>
 
+      <!-- Chart Containers -->
+      <div style="display: flex; gap: 35px; margin-top: 30px; flex-wrap: wrap; justify-content: center;">
+        <!-- 📊 Bar Chart -->
+        <div style="flex: 1; max-width: 550px; background: #ffffff; padding: 20px; border-radius: 16px;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: all 0.3s ease; transform: translateZ(0);">
+          <h3 style="margin-bottom: 10px; text-align:center; color:#2c3e50;">📊 Item Quantities</h3>
+          <canvas id="itemQtyChart" width="300" height="250"></canvas>
+        </div>
+
+        <!-- 🍩 Doughnut Chart -->
+        <div style="flex: 1; max-width: 550px; background: #ffffff; padding: 20px; border-radius: 16px;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: all 0.3s ease; transform: translateZ(0);">
+          <h3 style="margin-bottom: 10px; text-align:center; color:#2c3e50;">🧩 Stock Status</h3>
+          <canvas id="stockStatusChart" width="300" height="250"></canvas>
+        </div>
+      </div>
+
+      <!-- Low Stock Products List -->
+      <div id="lowStockListContainer" style="margin-top: 20px; min-width: 250px; background: #fce4e4; border-radius: 12px; padding: 15px; color: #c0392b; font-family: 'Poppins', sans-serif;">
+        <h3>Low Stock Products:</h3>
+        <ul id="lowStockList" style="margin: 0; padding-left: 20px; max-height: 150px; overflow-y: auto;"></ul>
+      </div>
     </div>
 
     <!-- Items Section Only -->
-    <div id="items" class="section">
+    <div id="items" class="section" style="display: none;">
       <h1>📦 Item Management</h1>
       <form id="itemForm" onsubmit="addOrUpdateItem(event)">
         <input type="hidden" id="itemId" />
@@ -111,6 +120,18 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Team Chat Section -->
+    <div id="teamchat" class="section" style="display: none;">
+      <h1>💬 Team Chat</h1>
+      <div style="margin-top: 20px; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+        <h3>📡 Send Real-time Message to Team</h3>
+        <div id="chatMessages" style="background:#f9f9f9; padding:10px; height:250px; overflow-y:auto; border:1px solid #ddd; border-radius:8px;"></div>
+        <input id="chatInput" type="text" placeholder="Type a message..." style="width:80%; padding:10px; margin-top:10px;" />
+        <button onclick="sendChatMessage()" style="padding:10px 20px; background:#3498db; color:white; border:none; border-radius:5px;">Send</button>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -119,15 +140,30 @@
     const role = sessionStorage.getItem("role") || "Stock Keeper";
     document.getElementById("welcomeUser").textContent = `Welcome Back, ${name} (${role}) 👋`;
 
-    // Show 'items' section by default for Stock Keeper role
+    // Show section function
+    function showSection(id, element) {
+      document.querySelectorAll('.section').forEach(sec => {
+        sec.style.display = 'none';
+      });
+      document.getElementById(id).style.display = 'block';
+
+      // Manage active nav-item classes
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+      if(element) element.classList.add('active');
+    }
+
+    // Show 'items' section by default for Stock Keeper role, else dashboard
     if (role === "Stock Keeper") {
-      showSection("items", document.querySelector(".nav-item"));
+      const itemsNav = Array.from(document.querySelectorAll('.nav-item')).find(nav => nav.textContent.includes('📦 Items'));
+      showSection("items", itemsNav);
+    } else {
+      const dashboardNav = Array.from(document.querySelectorAll('.nav-item')).find(nav => nav.textContent.includes('📊 Dashboard'));
+      showSection("dashboard", dashboardNav);
     }
 
     // Walking animation for boy.gif
     const boy = document.getElementById('walkingBoy');
     let position = -150;
-
     function moveBoy() {
       position += 1; // speed of walking
       if (position > window.innerWidth) {
@@ -136,7 +172,6 @@
       boy.style.left = position + 'px';
       requestAnimationFrame(moveBoy); // smooth frame loop
     }
-
     moveBoy(); // start animation
 
     let items = [];
@@ -182,7 +217,8 @@
         tbody.appendChild(row);
       });
 
-      updateDashboard(); // 🔁 Update stats
+      updateDashboard(); 
+      updateCharts();
     }
 
     function editItem(index) {
@@ -203,111 +239,150 @@
       editingIndex = -1;
     }
 
-    // Dashboard update
-function updateDashboard() {
-  const total = items.length;
-  const lowStockItems = items.filter(i => i.qty > 0 && i.qty <= 10);
-  const lowStockCount = lowStockItems.length;
-  const outOfStockCount = items.filter(i => i.qty === 0).length;
+    let itemQtyChart, stockStatusChart;
 
-  document.getElementById("totalItems").textContent = total;
-  document.getElementById("dashLowStock").textContent = lowStockCount;
-  document.getElementById("dashOutOfStock").textContent = outOfStockCount;
+    function updateCharts() {
+      // Destroy previous charts if exist
+      if (itemQtyChart) itemQtyChart.destroy();
+      if (stockStatusChart) stockStatusChart.destroy();
 
-  // Update Low Stock Products list
-  const lowStockListEl = document.getElementById("lowStockList");
-  lowStockListEl.innerHTML = ""; // clear previous
+      const itemNames = items.map(i => i.name);
+      const itemQuantities = items.map(i => i.qty);
 
-  if (lowStockCount === 0) {
-    const li = document.createElement("li");
-    li.textContent = "No low stock products.";
-    lowStockListEl.appendChild(li);
-  } else {
-    lowStockItems.forEach(item => {
-      const li = document.createElement("li");
-      li.textContent = `${item.name} (Qty: ${item.qty})`;
-      lowStockListEl.appendChild(li);
-    });
-  }
-}
-
-
-
-    // Show section function (assuming you have it defined somewhere)
-    function showSection(id, element) {
-      document.querySelectorAll('.section').forEach(sec => {
-        sec.style.display = 'none';
+      // 🔷 Bar Chart – Item Quantities
+      const ctxQty = document.getElementById("itemQtyChart").getContext("2d");
+      itemQtyChart = new Chart(ctxQty, {
+        type: "bar",
+        data: {
+          labels: itemNames,
+          datasets: [{
+            label: "Qty",
+            data: itemQuantities,
+            backgroundColor: "#3498db"
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
       });
-      document.getElementById(id).style.display = 'block';
 
-      // Manage active nav-item classes
-      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-      if(element) element.classList.add('active');
+      // 🔶 Doughnut Chart – Stock Status
+      const inStock = items.filter(i => i.qty > 10).length;
+      const lowStock = items.filter(i => i.qty > 0 && i.qty <= 10).length;
+      const outOfStock = items.filter(i => i.qty === 0).length;
+
+      const ctxStatus = document.getElementById("stockStatusChart").getContext("2d");
+      stockStatusChart = new Chart(ctxStatus, {
+        type: "doughnut",
+        data: {
+          labels: ["In Stock", "Low Stock", "Out of Stock"],
+          datasets: [{
+            data: [inStock, lowStock, outOfStock],
+            backgroundColor: ["#2ecc71", "#f39c12", "#e74c3c"]
+          }]
+        },
+        options: {
+          responsive: true,
+          cutout: "60%"
+        }
+      });
     }
 
-    // Show dashboard on load by default
-    showSection('dashboard');
+    // Dashboard update
+    function updateDashboard() {
+      const total = items.length;
+      const lowStockItems = items.filter(i => i.qty > 0 && i.qty <= 10);
+      const lowStockCount = lowStockItems.length;
+      const outOfStockCount = items.filter(i => i.qty === 0).length;
 
-async function loadItemsFromServer() {
-  try {
-    const response = await fetch('http://localhost:8080/mavenproject2-1.0-SNAPSHOT/ItemServlet');
-    if (!response.ok) throw new Error('Network error');
-    const serverItems = await response.json();
+      document.getElementById("totalItems").textContent = total;
+      document.getElementById("dashLowStock").textContent = lowStockCount;
+      document.getElementById("dashOutOfStock").textContent = outOfStockCount;
 
-    // Map server data to your local array format (id, name, price, qty)
-    items = serverItems.map(item => ({
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      qty: item.quantity  
-    }));
+      // Update Low Stock Products list
+      const lowStockListEl = document.getElementById("lowStockList");
+      lowStockListEl.innerHTML = ""; // clear previous
 
-    renderItemTable(); 
-  } catch (error) {
-    console.error('Failed to load items:', error);
-  }
-}
+      if (lowStockCount === 0) {
+        const li = document.createElement("li");
+        li.textContent = "No low stock products.";
+        lowStockListEl.appendChild(li);
+      } else {
+        lowStockItems.forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = `${item.name} (Qty: ${item.qty})`;
+          lowStockListEl.appendChild(li);
+        });
+      }
+    }
 
-// Call this once page loads, or when you want to refresh
-loadItemsFromServer();
+    updateCharts();
 
+    async function loadItemsFromServer() {
+      try {
+        const response = await fetch('http://localhost:8080/mavenproject2-1.0-SNAPSHOT/ItemServlet');
+        if (!response.ok) throw new Error('Network error');
+        const serverItems = await response.json();
 
-const socket = new WebSocket("ws://localhost:8080/mavenproject2-1.0-SNAPSHOT/teamchat");
+        // Map server data to your local array format (id, name, price, qty)
+        items = serverItems.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          qty: item.quantity  
+        }));
 
-// Get username and role from sessionStorage
-  const userName = sessionStorage.getItem("username") || "Unknown";
-  const userRole = sessionStorage.getItem("role") || "Guest";
-  
-  
-// When connected
-socket.onopen = () => {
-  console.log("✅ WebSocket connected");
-};
+        renderItemTable(); 
+      } catch (error) {
+        console.error('Failed to load items:', error);
+      }
+    }
 
-// When message received
-socket.onmessage = (event) => {
-  const chatBox = document.getElementById("chatMessages");
-  chatBox.innerHTML += `<p>${event.data}</p>`;
-  chatBox.scrollTop = chatBox.scrollHeight;
-};
+    loadItemsFromServer();
 
+    const socket = new WebSocket("ws://localhost:8080/mavenproject2-1.0-SNAPSHOT/teamchat");
 
-// Send message
-function sendChatMessage() {
-  const input = document.getElementById("chatInput");
-  const message = input.value.trim();
-  if (message && socket.readyState === WebSocket.OPEN) {
-    const formatted = `<strong>${userName} (${userRole}):</strong> ${message}`;
-    socket.send(formatted);
+    // Get username and role from sessionStorage
+    const userName = sessionStorage.getItem("username") || "Unknown";
+    const userRole = sessionStorage.getItem("role") || "Guest";
 
-    // Add message locally so you can see your own message immediately
-    const chatBox = document.getElementById("chatMessages");
-    chatBox.innerHTML += `<p>${formatted}</p>`;
-    chatBox.scrollTop = chatBox.scrollHeight;
+    // When connected
+    socket.onopen = () => {
+      console.log("✅ WebSocket connected");
+    };
 
-    input.value = '';
-  }
-}
+    // When message received
+    socket.onmessage = (event) => {
+      const chatBox = document.getElementById("chatMessages");
+      chatBox.innerHTML += `<p>${event.data}</p>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    // Send message
+    function sendChatMessage() {
+      const input = document.getElementById("chatInput");
+      const message = input.value.trim();
+      if (message && socket.readyState === WebSocket.OPEN) {
+        const formatted = `<strong>${userName} (${userRole}):</strong> ${message}`;
+        socket.send(formatted);
+
+          //const chatBox = document.getElementById("chatMessages");
+   // chatBox.innerHTML += `<p>${formatted}</p>`;
+   // chatBox.scrollTop = chatBox.scrollHeight;
+
+        input.value = '';
+      }
+    }
+
+    function logout() {
+      alert("Logout functionality not implemented yet.");
+      
+    }
 
   </script>
 

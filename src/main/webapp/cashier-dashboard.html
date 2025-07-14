@@ -10,7 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<title>📚 Pahana Edu Dashboard</title>
+<title>📚 Cashier Dashboard</title>
 </head>
 <body>
     
@@ -18,18 +18,15 @@
 <h2 class="typing-text"><span id="typed-text"></span><span class="cursor">|</span></h2>
   <div class="nav-item active" onclick="showSection('analytics', this)">📊 Analytics</div>
   <div class="nav-item" onclick="showSection('customers', this)">👥 Customers</div>
-  <div class="nav-item" onclick="showSection('users', this)">👤 Users</div>
-  <div class="nav-item" onclick="showSection('items', this)">📦 Items</div>
   <div class="nav-item" onclick="showSection('bill', this)">? Generate Bill</div>
   <div class="nav-item" onclick="showSection('history', this)">💳Bill History</div>
-  <div class="nav-item" onclick="showSection('teamchat', this)">💬 Team Chat</div>
   <div class="nav-item" onclick="showSection('help', this)">❓ Help</div>
 </div>
 
 <div class="main-content">
   <div style="position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: #f5f5f5; border-bottom: 2px solid #ddd;">
   <div>
-    <h1 style="margin: 0; font-size: 28px; color: #333;">Welcome Back, Admin 👋</h1>
+    <h1 style="margin: 0; font-size: 28px; color: #333;">Welcome Back, Cashier 👋</h1>
     <p style="margin: 5px 0 0 0; font-size: 16px; color: #666;">Here’s what’s happening in your dashboard today.</p>
   </div>
   
@@ -54,23 +51,24 @@
 
 <div id="analytics" class="section" style="display:none;">
   <h2 style="font-size: 28px; font-weight: bold; margin-bottom: 30px; color: #2c3e50;">
-    📊 Admin Dashboard Analytics
+    📊 Cashier Dashboard Analytics
   </h2>
 
   <div id="analyticsCards" style="display: flex; flex-wrap: wrap; gap: 25px;">
  <!-- Total Customers -->
 <div id="analytics-card" style="
-  flex: 1;
-  min-width: 250px;
-  background: linear-gradient(135deg, #3498db, #2980b9);
-  color: white;
-  padding: 15px;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  display: flex;
-  align-items: center;
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.3s ease;
+   flex: 1;
+    min-width: 260px;
+    background: linear-gradient(135deg, #74ebd5, #acb6e5);
+    color: #2c3e50;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    backdrop-filter: blur(6px);
+    transition: all 0.3s ease;
 ">
   <img src="scate.gif" alt="Skating Boy" style="height: 150px; margin-right: 2px;">
   <div>
@@ -82,16 +80,17 @@
 <!-- Total Items -->
 <div id="analytics-card" style="
   flex: 1;
-  min-width: 250px;
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
-  color: white;
-  padding: 15px;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  display: flex;
-  align-items: center;
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.3s ease;
+    min-width: 260px;
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    color: #2c3e50;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    backdrop-filter: blur(6px);
+    transition: all 0.3s ease;
 ">
   <img src="book.gif" alt="Book" style="height: 150px; margin-right: 2px;">
   <div>
@@ -102,17 +101,18 @@
 
 <!-- Total Bills -->
 <div id="analytics-card" style="
-  flex: 1;
-  min-width: 250px;
-  background: linear-gradient(135deg, #e67e22, #d35400);
-  color: white;
-  padding: 15px;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  display: flex;
-  align-items: center;
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.3s ease;
+ flex: 1;
+    min-width: 260px;
+    background: linear-gradient(135deg, #c6ffdd, #fbd786, #f7797d);
+    color: #2c3e50;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    backdrop-filter: blur(6px);
+    transition: all 0.3s ease;
 ">
   <img src="money.gif" alt="Money" style="height: 150px; margin-right: 2px;">
   <div>
@@ -138,7 +138,13 @@
 
   <button class="next" onclick="slideProducts('right')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); background:#fff; color:#d63384; border:none; border-radius:50%; width:44px; height:44px; font-size:24px; font-weight:bold; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.1);">›</button>
 </div>
-
+ 
+              <div style="margin-top:30px; padding:20px; border:1px solid #ccc; border-radius:10px;">
+  <h3>📡 Send Real-time Message to Team</h3>
+  <div id="chatMessages" style="background:#f9f9f9; padding:10px; height:150px; overflow-y:auto; border:1px solid #ddd; border-radius:8px;"></div>
+  <input id="chatInput" type="text" placeholder="Type a message..." style="width:80%; padding:10px; margin-top:10px;" />
+  <button onclick="sendChatMessage()" style="padding:10px 20px; background:#3498db; color:white; border:none; border-radius:5px;">Send</button>
+</div>
 </div>
 
 
@@ -179,58 +185,6 @@
       </tbody>
     </table>
   </div>
-
-
-<div id="users" class="section" style="display:none;">
-  <h1>Manage Users</h1>
-  <form id="userForm" onsubmit="addOrUpdateUser(event)" style="background:#f7f7f7;padding:20px;border-radius:10px;margin-bottom:20px;">
-    <input type="text" id="username" placeholder="Username" required style="padding:10px;margin:5px;" />
-    <input type="password" id="password" placeholder="Password" required style="padding:10px;margin:5px;" />
-    <select id="userRole" required style="padding:10px;margin:5px;">
-      <option value="">Select Role</option>
-      <option value="admin">Admin</option>
-      <option value="cashier">Cashier</option>
-      <option value="Stock Keeper">Stock Keeper</option>
-    </select>
-    <button type="submit" style="padding:10px 20px;margin:5px;background:#27ae60;color:white;border:none;">Add / Update</button>
-    <button type="button" onclick="clearUserForm()" style="padding:10px 20px;margin:5px;background:#e67e22;color:white;border:none;">Clear</button>
-  </form>
-
-  <table id="userTable" style="width:100%;border-collapse:collapse;">
-    <thead style="background:#2980b9;color:white;">
-      <tr>
-        <th style="padding:10px;">Username</th>
-        <th style="padding:10px;">Password</th>
-        <th style="padding:10px;">Role</th>
-        <th style="padding:10px;">Actions</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</div>
-
-  <div id="items" class="section" style="display:none;">
-  <h1>Item Management</h1>
-  <form id="itemForm" onsubmit="addOrUpdateItem(event)">
-    <input type="hidden" id="itemId" />
-    <input type="text" id="itemName" placeholder="Item Name" required />
-    <input type="number" id="itemPrice" placeholder="Price Per Unit" required min="0" step="0.01" />
-    <input type="number" id="itemQuantity" placeholder="Quantity" required min="0" step="1" /> <!-- ✅ Added -->
-    <button type="submit">Add / Update Item</button>
-    <button type="button" onclick="clearItemForm()" style="background:#e67e22; margin-left: 10px;">Clear</button>
-  </form>
-
-  <table id="itemTable">
-    <thead>
-      <tr>
-        <th>ID</th><th>Name</th><th>Price</th><th>Quantity</th><th>Actions</th> <!-- ✅ Added Quantity -->
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Item rows go here -->
-    </tbody>
-  </table>
-</div>
 
 
   <div id="bill" class="section" style="display:none;">
@@ -279,18 +233,6 @@
   </table>
 </div>
 
- <!-- Team Chat Section -->
-    <div id="teamchat" class="section" style="display: none;">
-      <h1>💬 Team Chat</h1>
-      <div style="margin-top: 20px; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
-        <h3>📡 Send Real-time Message to Team</h3>
-        <div id="chatMessages" style="background:#f9f9f9; padding:10px; height:250px; overflow-y:auto; border:1px solid #ddd; border-radius:8px;"></div>
-        <input id="chatInput" type="text" placeholder="Type a message..." style="width:80%; padding:10px; margin-top:10px;" />
-        <button onclick="sendChatMessage()" style="padding:10px 20px; background:#3498db; color:white; border:none; border-radius:5px;">Send</button>
-      </div>
-    </div>
- 
- 
   <div id="help" class="section" style="display:none;">
     <h1>Help Section</h1>
     <p>Use the sidebar to navigate between Customers, Items, Bill generation, and Help.</p>
@@ -378,6 +320,7 @@ socket.onmessage = (event) => {
 
 
 // Send message
+// Send message
 function sendChatMessage() {
   const input = document.getElementById("chatInput");
   const message = input.value.trim();
@@ -386,13 +329,14 @@ function sendChatMessage() {
     socket.send(formatted);
 
     // Add message locally so you can see your own message immediately
-     //const chatBox = document.getElementById("chatMessages");
+    //const chatBox = document.getElementById("chatMessages");
    // chatBox.innerHTML += `<p>${formatted}</p>`;
    // chatBox.scrollTop = chatBox.scrollHeight;
 
     input.value = '';
   }
 }
+
 
 </script>
 
