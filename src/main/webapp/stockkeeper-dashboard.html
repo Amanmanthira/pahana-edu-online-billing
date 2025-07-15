@@ -97,29 +97,54 @@
       </div>
     </div>
 
-    <!-- Items Section Only -->
-    <div id="items" class="section" style="display: none;">
-      <h1>📦 Item Management</h1>
-      <form id="itemForm" onsubmit="addOrUpdateItem(event)">
-        <input type="hidden" id="itemId" />
-        <input type="text" id="itemName" placeholder="Item Name" required />
-        <input type="number" id="itemPrice" placeholder="Price Per Unit" required min="0" step="0.01" />
-        <input type="number" id="itemQuantity" placeholder="Quantity" required min="0" step="1" />
-        <button type="submit">Add / Update Item</button>
-        <button type="button" onclick="clearItemForm()" style="background:#e67e22; margin-left: 10px;">Clear</button>
-      </form>
+   <!-- Items Section Only -->
+<div id="items" class="section" style="display: none;">
+  <h1 style="margin-bottom: 20px;">📦 Item Management</h1>
 
-      <table id="itemTable">
-        <thead>
-          <tr>
-            <th>ID</th><th>Name</th><th>Price</th><th>Quantity</th><th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Item rows go here -->
-        </tbody>
-      </table>
-    </div>
+  <!-- 🔍 Search & Export Section -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+    <input id="itemSearch" type="text" placeholder="🔍 Search items..." 
+      oninput="filterItems()" 
+      style="padding: 10px 15px; border-radius: 10px; border: 1px solid #ccc; width: 280px;" />
+
+    <!-- Export Dropdown -->
+  <div style="position: relative;">
+    <button onclick="toggleExportMenu()" 
+      style="background-color: #27ae60; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">
+      ⬇️ Export Data ▼
+    </button>
+    <ul id="exportMenu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 8px; padding: 10px; list-style: none; width: 200px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); z-index: 999;">
+      <li onclick="exportCSV()">📁 Export as CSV</li>
+      <li onclick="exportJSON()">🗂 Export as JSON</li>
+      <li onclick="exportTXT()">📄 Export as Text</li>
+      <li onclick="printItems()">🖨 Print View</li>
+      <li onclick="copyToClipboard()">📋 Copy to Clipboard</li>
+    </ul>
+  </div>
+  </div>
+
+  <!-- 🧾 Add / Update Form -->
+  <form id="itemForm" onsubmit="addOrUpdateItem(event)" style="margin-bottom: 20px;">
+    <input type="hidden" id="itemId" />
+    <input type="text" id="itemName" placeholder="Item Name" required />
+    <input type="number" id="itemPrice" placeholder="Price Per Unit" required min="0" step="0.01" />
+    <input type="number" id="itemQuantity" placeholder="Quantity" required min="0" step="1" />
+    <button type="submit">Add / Update Item</button>
+    <button type="button" onclick="clearItemForm()" style="background:#e67e22; margin-left: 10px;">Clear</button>
+  </form>
+
+  <!-- 📋 Item Table -->
+  <table id="itemTable">
+    <thead>
+      <tr>
+        <th>ID</th><th>Name</th><th>Price</th><th>Quantity</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Item rows go here -->
+    </tbody>
+  </table>
+</div>
 
     <!-- Team Chat Section -->
     <div id="teamchat" class="section" style="display: none;">
@@ -384,6 +409,74 @@
       
     }
 
+function toggleExportMenu() {
+  const menu = document.getElementById("exportMenu");
+  menu.style.display = (menu.style.display === "none" || !menu.style.display) ? "block" : "none";
+  document.addEventListener("click", function closeMenu(e) {
+    if (!e.target.closest("#exportMenu") && !e.target.closest("button")) {
+      menu.style.display = "none";
+      document.removeEventListener("click", closeMenu);
+    }
+  });
+}
+
+function exportCSV() {
+  let csv = "ID,Name,Price,Quantity\n";
+  items.forEach(i => {
+    csv += `${i.id},${i.name},${i.price},${i.qty}\n`;
+  });
+  downloadFile(csv, 'stock_items.csv', 'text/csv');
+}
+
+function exportJSON() {
+  const json = JSON.stringify(items, null, 2);
+  downloadFile(json, 'stock_items.json', 'application/json');
+}
+
+function exportTXT() {
+  let txt = '';
+  items.forEach(i => {
+    txt += `ID: ${i.id}, Name: ${i.name}, Price: ${i.price}, Qty: ${i.qty}\n`;
+  });
+  downloadFile(txt, 'stock_items.txt', 'text/plain');
+}
+
+function printItems() {
+  let html = "<h2>📋 Printable Item List</h2><table border='1' cellspacing='0' cellpadding='8'><tr><th>ID</th><th>Name</th><th>Price</th><th>Quantity</th></tr>";
+  items.forEach(i => {
+    html += `<tr><td>${i.id}</td><td>${i.name}</td><td>${i.price}</td><td>${i.qty}</td></tr>`;
+  });
+  html += "</table>";
+
+  const newTab = window.open("", "_blank");
+  newTab.document.write("<html><head><title>Print Items</title></head><body>" + html + "</body></html>");
+  newTab.document.close();
+  newTab.print();
+}
+
+function copyToClipboard() {
+  let text = "ID\tName\tPrice\tQuantity\n";
+  items.forEach(i => {
+    text += `${i.id}\t${i.name}\t${i.price}\t${i.qty}\n`;
+  });
+  navigator.clipboard.writeText(text).then(() => {
+    alert("✅ Items copied to clipboard!");
+  }, () => {
+    alert("❌ Failed to copy.");
+  });
+}
+
+function downloadFile(content, filename, type) {
+  const blob = new Blob([content], { type });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
+
+    
   </script>
 
 </body>

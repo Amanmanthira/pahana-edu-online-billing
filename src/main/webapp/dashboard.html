@@ -22,6 +22,7 @@
   <div class="nav-item" onclick="showSection('items', this)">📦 Items</div>
   <div class="nav-item" onclick="showSection('bill', this)">? Generate Bill</div>
   <div class="nav-item" onclick="showSection('history', this)">💳Bill History</div>
+  <div class="nav-item" onclick="showSection('bank', this)">🏦 Bank Account</div>
   <div class="nav-item" onclick="showSection('teamchat', this)">💬 Team Chat</div>
   <div class="nav-item" onclick="showSection('help', this)">❓ Help</div>
 </div>
@@ -279,6 +280,33 @@
   </table>
 </div>
 
+<div id="bank" class="section" style="display:none;">
+  <h1>🏦 Shop Account Overview</h1>
+  <div style="background:#f5f5f5;padding:20px;border-radius:10px;margin-bottom:20px;">
+    <p><strong>Bank:</strong> ABC Bank</p>
+    <p><strong>Account No:</strong> 000123456789</p>
+    <h2 style="color:#27ae60;">Balance: LKR <span id="bankBalance">0.00</span></h2>
+  </div>
+
+  <h3>💼 Transaction History</h3>
+
+  <!-- Export Buttons -->
+  <div style="margin-bottom: 10px;">
+    <button onclick="exportBankTransactions('csv')" style="margin-right: 10px;">Export as CSV</button>
+    <button onclick="exportBankTransactions('txt')">Export as TXT</button>
+  </div>
+
+  <table style="width:100%;border-collapse:collapse;" border="1">
+    <thead style="background:#2980b9;color:white;">
+      <tr>
+        <th>Date</th><th>Description</th><th>Type</th><th>Amount</th><th>Balance After</th>
+      </tr>
+    </thead>
+    <tbody id="bankTransactions"></tbody>
+  </table>
+</div>
+
+
  <!-- Team Chat Section -->
     <div id="teamchat" class="section" style="display: none;">
       <h1>💬 Team Chat</h1>
@@ -290,7 +318,8 @@
       </div>
     </div>
  
- 
+
+
   <div id="help" class="section" style="display:none;">
     <h1>Help Section</h1>
     <p>Use the sidebar to navigate between Customers, Items, Bill generation, and Help.</p>
@@ -393,6 +422,157 @@ function sendChatMessage() {
     input.value = '';
   }
 }
+
+
+const bankBalanceEl = document.getElementById("bankBalance");
+const bankTransactionsEl = document.getElementById("bankTransactions");
+
+let bankBalance = parseFloat(localStorage.getItem("bankBalance") || "0");
+let bankHistory = JSON.parse(localStorage.getItem("bankHistory") || "[]");
+
+function updateBankUI() {
+  bankBalanceEl.innerText = bankBalance.toFixed(2);
+  bankTransactionsEl.innerHTML = "";
+  bankHistory.forEach(tx => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${tx.date}</td>
+      <td>${tx.description}</td>
+      <td>${tx.type}</td>
+      <td style="color:${tx.type==='Credit'?'green':'red'};">${tx.amount.toFixed(2)}</td>
+      <td>${tx.balanceAfter.toFixed(2)}</td>`;
+    bankTransactionsEl.appendChild(tr);
+  });
+}
+
+updateBankUI();
+
+// Generate and save fake transaction data if none exists
+function generateFakeTransactions() {
+  const names = ["Kasun", "Nimal", "Thilini", "Priya"];
+  const descriptions = ["Electricity Bill", "Shop Rent", "Internet", "Inventory"];
+  const history = [];
+  let balance = 0;
+
+  for (let i = 0; i < 10; i++) {
+    const isCredit = Math.random() > 0.4; // 60% chance debit, 40% credit
+    const amount = Math.floor(Math.random() * 15000) + 1000;
+    const description = isCredit
+      ? `Bill Payment from ${names[Math.floor(Math.random() * names.length)]}`
+      : descriptions[Math.floor(Math.random() * descriptions.length)];
+
+    balance += isCredit ? amount : -amount;
+
+    history.push({
+      date: `2025-07-${String(i + 1).padStart(2, "0")}`,
+      type: isCredit ? "Credit" : "Debit",
+      description,
+      amount,
+      balanceAfter: balance
+    });
+  }
+
+  localStorage.setItem("bankBalance", balance);
+  localStorage.setItem("bankHistory", JSON.stringify(history));
+}
+
+// Load bank balance and history from localStorage
+function loadBankData() {
+  let balance = localStorage.getItem("bankBalance");
+  let history = localStorage.getItem("bankHistory");
+
+  if (!history || !balance) {
+    generateFakeTransactions();
+    balance = localStorage.getItem("bankBalance");
+    history = localStorage.getItem("bankHistory");
+  }
+
+  return {
+    balance: Number(balance),
+    history: JSON.parse(history)
+  };
+}
+
+// Render the bank data in the console or in your dashboard UI
+function renderBankData() {
+  const { balance, history } = loadBankData();
+
+  console.log("Current Balance:", balance);
+
+  console.table(history);
+
+  // Example: If you want to show it in HTML:
+  /*
+  document.getElementById("balance").textContent = `Balance: $${balance}`;
+
+  const table = document.getElementById("transaction-history");
+  table.innerHTML = "";
+  history.forEach(tx => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${tx.date}</td>
+      <td>${tx.type}</td>
+      <td>${tx.description}</td>
+      <td>$${tx.amount.toLocaleString()}</td>
+      <td>$${tx.balanceAfter.toLocaleString()}</td>
+    `;
+    table.appendChild(row);
+  });
+  */
+}
+
+// Run on page load or dashboard init
+renderBankData();
+
+
+function exportBankTransactions(format) {
+  const rows = document.querySelectorAll("#bankTransactions tr");
+  if (rows.length === 0) {
+    alert("No transactions to export.");
+    return;
+  }
+
+  let data = [];
+  // Add header row
+  data.push(["Date", "Description", "Type", "Amount", "Balance After"]);
+
+  // Loop through table rows and cells to collect data
+  rows.forEach(row => {
+    let rowData = [];
+    row.querySelectorAll("td").forEach(cell => {
+      // Escape commas in CSV, if any
+      let cellText = cell.textContent.replace(/,/g, ""); 
+      rowData.push(cellText);
+    });
+    data.push(rowData);
+  });
+
+  if (format === "csv") {
+    // Create CSV string
+    const csvContent = data.map(e => e.join(",")).join("\n");
+    downloadFile(csvContent, "bank_transactions.csv", "text/csv");
+  } else if (format === "txt") {
+    // Create TXT string (tab separated for readability)
+    const txtContent = data.map(e => e.join("\t")).join("\n");
+    downloadFile(txtContent, "bank_transactions.txt", "text/plain");
+  } else {
+    alert("Unsupported export format");
+  }
+}
+
+function downloadFile(content, fileName, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+
 
 </script>
 
