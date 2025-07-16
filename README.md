@@ -22,11 +22,11 @@ A **full-stack Java Servlet** billing and inventory management system featuring 
 
 ### 🗣️ Team Chat
 - Real-time chat functionality between Admin and Stock Keepers
-https://github.com/user-attachments/assets/7cc1e0ac-158c-4ce1-bd97-b957c17c009a
-
+- 
+[https://github.com/Amanmanthira/pahana-edu-online-billing-with-automation/issues/1#issue-3234315051](https://github.com/user-attachments/assets/b55de90b-2166-4d96-97d4-e44333d3f464)
 
 ### 👤 Customer Management
-- Add customers before billing (**Cashier only**)
+- Add customers before billing 
 
 ---
 
@@ -34,9 +34,9 @@ https://github.com/user-attachments/assets/7cc1e0ac-158c-4ce1-bd97-b957c17c009a
 
 | Role          | Permissions                                             |
 | ------------- | -------------------------------------------------------|
-| **Admin**     | Analytics, Manage Items, Billing, Bill History, Users, Chat, Logout |
-| **Stock Keeper** | Analytics, Manage Items, Chat, Logout                 |
-| **Cashier**   | Analytics, Add Customer, Billing, Bill History, Help, Logout  |
+| **👨‍💼Admin**     | Analytics, Manage Items, Billing, Bill History, Users, Chat, Logout |
+| **👨🏻‍💻Stock Keeper** | Analytics, Manage Items, Chat, Logout                 |
+| **💵Cashier**   | Analytics, Add Customer, Billing, Bill History, Help, Logout  |
 
 ---
 
@@ -53,9 +53,12 @@ https://github.com/user-attachments/assets/7cc1e0ac-158c-4ce1-bd97-b957c17c009a
 ---
 
 ## 📸 UI Snapshots
-
-![UI Preview](https://github.com/user-attachments/assets/64028d76-4354-4db1-89a6-3e3336e1ee85)
-
+---
+https://github.com/user-attachments/assets/1b54f7f2-1444-42ad-a812-a2e76c23901b
+## 
+https://github.com/user-attachments/assets/9dfd4c49-308c-412d-a589-03640d5e9115
+##
+https://github.com/user-attachments/assets/577bb090-d74e-44aa-8960-f5b72c8952d4
 
 ## 📁 Project Structure
 
