@@ -116,27 +116,56 @@ The `BillServlet`'s GET method handles admin analytics:
 ### 🗃️ MySQL Database Tables Required:
 
 ```sql
-CREATE TABLE customers (
-  account_no VARCHAR(50) PRIMARY KEY,
-  name VARCHAR(100)
-);
+CREATE TABLE IF NOT EXISTS `customers` (
+  `account_no` varchar(20) NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `address` text,
+  `phone` varchar(20) DEFAULT NULL,
+  `units` int(11) DEFAULT NULL,
+  PRIMARY KEY (`account_no`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE items (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(100),
-  price DOUBLE
-);
+DROP TABLE IF EXISTS `items`;
+CREATE TABLE IF NOT EXISTS `items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `price_per_unit` decimal(10,2) DEFAULT NULL,
+  `quantity` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE tdb (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  account_no VARCHAR(50),
-  item_id INT,
-  quantity INT,
-  unit_price DOUBLE,
-  subtotal DOUBLE,
-  total DOUBLE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+DROP TABLE IF EXISTS `tdb`;
+CREATE TABLE IF NOT EXISTS `tdb` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `account_no` varchar(50) DEFAULT NULL,
+  `item_id` int(11) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `unit_price` decimal(10,2) DEFAULT NULL,
+  `subtotal` decimal(10,2) DEFAULT NULL,
+  `total` decimal(10,2) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `team_chat`;
+CREATE TABLE IF NOT EXISTS `team_chat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) DEFAULT NULL,
+  `role` varchar(30) DEFAULT NULL,
+  `message` text,
+  `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(100) DEFAULT NULL,
+  `userRole` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
 
 ---
