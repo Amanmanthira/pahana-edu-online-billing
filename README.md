@@ -1,50 +1,61 @@
+# 🚀 Pahana EDU - Smart Billing System
 
-# 🧾 Pahana EDU - Smart Billing System
-
-Welcome to the official repository of the **Pahana EDU's Smart Billing & Inventory Dashboard** — a modern, responsive, and efficient full-stack web application built to manage customers, inventory, and billing in an educational institution.
-
-> 🚀 Designed with simplicity in mind, but powerful enough to streamline admin tasks with real-time insights and billing automation.
+A **full-stack Java Servlet** billing and inventory management system featuring real-time analytics and role-based dashboards for efficient business operations.
 
 ---
 
-## ✨ Features Overview
+## ✨ Features
 
-> A complete system to track, bill, and analyze institute operations — all from one elegant dashboard.
+### 🔐 Authentication
+- Role-based login system with distinct access for **Admin**, **Stock Keeper**, and **Cashier**
 
-### 🧠 Core Functionalities:
+### 📊 Dashboard Analytics
+- Overview of **Total Customers**, **Total Items**, and **Total Billing Amount**
 
-- ✅ **Customer Management** – Add, edit, and track registered customers.
-- ✅ **Item Management** – Manage inventory of all items sold or billed.
-- ✅ **Billing System** – Generate bills instantly and store each transaction in the database.
-- ✅ **Bill History Viewer** – Browse previously generated bills by account number or date.
-- ✅ **Admin Dashboard Analytics** – Displays live stats:
-  - 👥 Total Customers
-  - 📦 Total Items
-  - 💵 Total Billing Amount (in LKR)
-- ✅ **Logout Functionality** – Secure session handling for admins.
-- 🖨️ **Printable Bill Receipts** 
+### 🧾 Billing System
+- Add items to bills seamlessly
+- Print & save receipts for records
+- View detailed billing history
+
+### 📦 Inventory Management
+- Add, edit, and delete inventory items effortlessly
+
+### 🗣️ Team Chat
+- Real-time chat functionality between Admin and Stock Keepers
+https://github.com/user-attachments/assets/7cc1e0ac-158c-4ce1-bd97-b957c17c009a
+
+
+### 👤 Customer Management
+- Add customers before billing (**Cashier only**)
 
 ---
 
-## 💻 Technology Stack
+## 👥 User Roles & Permissions
 
-| Layer         | Technology         |
-|---------------|--------------------|
-| Frontend      | HTML, CSS, JavaScript |
-| Backend       | Java Servlet (Jakarta EE) |
-| Database      | MySQL              |
-| Build Tool    | Apache Maven       |
-| Architecture  | MVC-S (Model-View-Controller-Service) |
+| Role          | Permissions                                             |
+| ------------- | -------------------------------------------------------|
+| **Admin**     | Analytics, Manage Items, Billing, Bill History, Users, Chat, Logout |
+| **Stock Keeper** | Analytics, Manage Items, Chat, Logout                 |
+| **Cashier**   | Analytics, Add Customer, Billing, Bill History, Help, Logout  |
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer         | Technology                  |
+| ------------- | --------------------------- |
+| **Frontend**  | HTML, CSS, JavaScript       |
+| **Backend**   | Java Servlet (Jakarta EE)   |
+| **Database**  | MySQL                      |
+| **Build**     | Maven                      |
+| **Architecture** | MVC-S                   |
 
 ---
 
 ## 📸 UI Snapshots
 
-https://github.com/user-attachments/assets/64028d76-4354-4db1-89a6-3e3336e1ee85
+![UI Preview](https://github.com/user-attachments/assets/64028d76-4354-4db1-89a6-3e3336e1ee85)
 
-
-
----
 
 ## 📁 Project Structure
 
