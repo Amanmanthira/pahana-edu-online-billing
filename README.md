@@ -34,7 +34,7 @@ A **full-stack Java Servlet** billing and inventory management system featuring 
 
 | Role          | Permissions                                             |
 | ------------- | -------------------------------------------------------|
-| **👨‍💼Admin**     | Analytics, Manage Items, Billing, Bill History, Users, Chat, Logout |
+| **👨‍💼Admin**     | Analytics, Manage Items, Billing, Bill History, Bank History & amount , Users, Chat, Logout |
 | **👨🏻‍💻Stock Keeper** | Analytics, Manage Items, Chat, Logout                 |
 | **💵Cashier**   | Analytics, Add Customer, Billing, Bill History, Help, Logout  |
 
