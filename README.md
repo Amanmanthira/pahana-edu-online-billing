@@ -106,7 +106,7 @@ The `BillServlet`'s GET method handles admin analytics:
 ### ✅ Prerequisites:
 
 - Java 8+  
-- Apache Tomcat or Glassfish  
+- Apache Tomcat or wildfly
 - MySQL Server  
 - Maven (for building)  
 - NetBeans / Eclipse IDE  
