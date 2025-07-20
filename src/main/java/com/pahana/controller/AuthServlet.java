@@ -2,6 +2,7 @@ package com.pahana.controller;
 
 import com.pahana.model.User;
 import com.pahana.service.AuthService;
+import com.pahana.util.DBConnection;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.*;
@@ -16,30 +17,26 @@ public class AuthServlet extends HttpServlet {
     }
 
     @Override
-protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-    String u = req.getParameter("username");
-    String p = req.getParameter("password");
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        String u = req.getParameter("username");
+        String p = req.getParameter("password");
 
-    try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pahanaedu", "root", "")) {
+        try {
+            Connection conn = DBConnection.getInstance();
             AuthService auth = new AuthService(conn);
             User user = auth.login(new User(u, p));
 
             if (user != null) {
                 res.setContentType("application/json");
-res.getWriter().write("{\"message\":\"Login successful\", \"role\":\"" + user.getUserRole() + "\", \"username\":\"" + user.getUsername() + "\"}");
+                res.getWriter().write("{\"message\":\"Login successful\", \"role\":\"" + user.getUserRole() + "\", \"username\":\"" + user.getUsername() + "\"}");
             } else {
                 res.sendError(401, "Invalid credentials");
             }
+
+        } catch (ClassNotFoundException e) {
+            res.sendError(500, "MySQL Driver not found: " + e.getMessage());
+        } catch (IOException | SQLException e) {
+            res.sendError(500, "Server error: " + e.getMessage());
         }
-
-    } catch (ClassNotFoundException e) {
-        res.sendError(500, "MySQL Driver not found: " + e.getMessage());
-    } catch (IOException | SQLException e) {
-        res.sendError(500, "Server error: " + e.getMessage());
     }
-}
-
 }

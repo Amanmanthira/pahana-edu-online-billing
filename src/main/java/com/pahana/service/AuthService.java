@@ -39,7 +39,7 @@ String role = rs.getString("userRole");
     PreparedStatement ps = conn.prepareStatement(sql);
     ps.setString(1, user.getUsername());
     ps.setString(2, user.getPassword());
-    ps.setString(3, user.getRole()); // ✅ insert role
+    ps.setString(3, user.getRole()); 
     ps.executeUpdate();
     return true;
 }

@@ -1,7 +1,7 @@
 package com.pahana.controller;
-
 import com.pahana.model.Customer;
 import com.pahana.service.CustomerService;
+import com.pahana.util.DBConnection;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.*;
@@ -18,7 +18,8 @@ public class CustomerServlet extends HttpServlet {
             Integer.parseInt(req.getParameter("units"))
         );
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pahanaedu", "root", "")) {
+        try {
+            Connection conn = DBConnection.getInstance();
             CustomerService service = new CustomerService(conn);
             service.addCustomer(c);
             res.getWriter().write("Customer added.");
@@ -37,7 +38,8 @@ public class CustomerServlet extends HttpServlet {
         String phone = data[3].split("=")[1];
         int units = Integer.parseInt(data[4].split("=")[1]);
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pahanaedu", "root", "")) {
+        try {
+            Connection conn = DBConnection.getInstance();
             CustomerService service = new CustomerService(conn);
             service.updateCustomer(new Customer(acc, name, addr, phone, units));
             res.getWriter().write("Customer updated.");
@@ -53,7 +55,8 @@ public class CustomerServlet extends HttpServlet {
             res.sendError(400, "Missing accountNo");
             return;
         }
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pahanaedu", "root", "")) {
+        try {
+            Connection conn = DBConnection.getInstance();
             CustomerService service = new CustomerService(conn);
             boolean deleted = service.deleteCustomer(acc);
             if (deleted) {
@@ -69,12 +72,12 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String acc = req.getParameter("accountNo");
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pahanaedu", "root", "")) {
+        try {
+            Connection conn = DBConnection.getInstance();
             CustomerService service = new CustomerService(conn);
             res.setContentType("application/json");
 
             if (acc == null || acc.isEmpty()) {
-                // return all customers as JSON array
                 List<Customer> customers = service.findAllCustomers();
                 StringBuilder sb = new StringBuilder();
                 sb.append("[");

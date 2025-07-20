@@ -414,10 +414,7 @@ function sendChatMessage() {
     const formatted = `<strong>${userName} (${userRole}):</strong> ${message}`;
     socket.send(formatted);
 
-    // Add message locally so you can see your own message immediately
-     //const chatBox = document.getElementById("chatMessages");
-   // chatBox.innerHTML += `<p>${formatted}</p>`;
-   // chatBox.scrollTop = chatBox.scrollHeight;
+  
 
     input.value = '';
   }
@@ -447,7 +444,7 @@ function updateBankUI() {
 
 updateBankUI();
 
-// Generate and save fake transaction data if none exists
+// Generate and save transaction data if none exists
 function generateFakeTransactions() {
   const names = ["Kasun", "Nimal", "Thilini", "Priya"];
   const descriptions = ["Electricity Bill", "Shop Rent", "Internet", "Inventory"];
@@ -493,7 +490,6 @@ function loadBankData() {
   };
 }
 
-// Render the bank data in the console or in your dashboard UI
 function renderBankData() {
   const { balance, history } = loadBankData();
 
@@ -501,7 +497,7 @@ function renderBankData() {
 
   console.table(history);
 
-  // Example: If you want to show it in HTML:
+  // 
   /*
   document.getElementById("balance").textContent = `Balance: $${balance}`;
 

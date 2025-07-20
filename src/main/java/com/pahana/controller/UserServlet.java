@@ -1,7 +1,7 @@
 package com.pahana.controller;
-
 import com.pahana.model.User;
 import com.pahana.service.UserService;
+import com.pahana.util.DBConnection;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.*;
@@ -18,7 +18,8 @@ public class UserServlet extends HttpServlet {
             req.getParameter("userRole")
         );
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pahanaedu", "root", "")) {
+        try {
+            Connection conn = DBConnection.getInstance();
             UserService service = new UserService(conn);
             service.addUser(user);
             res.getWriter().write("User added.");
@@ -36,7 +37,8 @@ public class UserServlet extends HttpServlet {
         String password = data[1].split("=")[1];
         String userRole = data[2].split("=")[1];
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pahanaedu", "root", "")) {
+        try {
+            Connection conn = DBConnection.getInstance();
             UserService service = new UserService(conn);
             service.updateUser(new User(username, password, userRole));
             res.getWriter().write("User updated.");
@@ -54,7 +56,8 @@ public class UserServlet extends HttpServlet {
             return;
         }
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pahanaedu", "root", "")) {
+        try {
+            Connection conn = DBConnection.getInstance();
             UserService service = new UserService(conn);
             boolean deleted = service.deleteUser(username);
             if (deleted) {
@@ -71,7 +74,8 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String username = req.getParameter("username");
 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pahanaedu", "root", "")) {
+        try {
+            Connection conn = DBConnection.getInstance();
             UserService service = new UserService(conn);
             res.setContentType("application/json");
 
