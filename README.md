@@ -20,10 +20,11 @@ A **full-stack Java Servlet** billing and inventory management system featuring 
 ### 📦 Inventory Management
 - Add, edit, and delete inventory items effortlessly
 
-### 🗣️ Team Chat
-- Real-time chat functionality between Admin and Stock Keepers
-- 
-[https://github.com/Amanmanthira/pahana-edu-online-billing-with-automation/issues/1#issue-3234315051](https://github.com/user-attachments/assets/b55de90b-2166-4d96-97d4-e44333d3f464)
+### 🗣️ Team Chat  
+Real-time chat functionality between Admin and Stock Keepers  
+
+![Team Chat Demo](Recording%202025-07-20%20162019.gif)
+
 
 ### 👤 Customer Management
 - Add customers before billing 
