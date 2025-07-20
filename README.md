@@ -1,50 +1,65 @@
+# 🚀 Pahana EDU - Smart Billing System
 
-# 🧾 Pahana EDU - Smart Billing System
-
-Welcome to the official repository of the **Pahana EDU's Smart Billing & Inventory Dashboard** — a modern, responsive, and efficient full-stack web application built to manage customers, inventory, and billing in an educational institution.
-
-> 🚀 Designed with simplicity in mind, but powerful enough to streamline admin tasks with real-time insights and billing automation.
+A **full-stack Java Servlet** billing and inventory management system featuring real-time analytics and role-based dashboards for efficient business operations.
 
 ---
 
-## ✨ Features Overview
+## ✨ Features
 
-> A complete system to track, bill, and analyze institute operations — all from one elegant dashboard.
+### 🔐 Authentication
+- Role-based login system with distinct access for **Admin**, **Stock Keeper**, and **Cashier**
 
-### 🧠 Core Functionalities:
+### 📊 Dashboard Analytics
+- Overview of **Total Customers**, **Total Items**, and **Total Billing Amount**
 
-- ✅ **Customer Management** – Add, edit, and track registered customers.
-- ✅ **Item Management** – Manage inventory of all items sold or billed.
-- ✅ **Billing System** – Generate bills instantly and store each transaction in the database.
-- ✅ **Bill History Viewer** – Browse previously generated bills by account number or date.
-- ✅ **Admin Dashboard Analytics** – Displays live stats:
-  - 👥 Total Customers
-  - 📦 Total Items
-  - 💵 Total Billing Amount (in LKR)
-- ✅ **Logout Functionality** – Secure session handling for admins.
-- 🖨️ **Printable Bill Receipts** 
+### 🧾 Billing System
+- Add items to bills seamlessly
+- Print & save receipts for records
+- View detailed billing history
+
+### 📦 Inventory Management
+- Add, edit, and delete inventory items effortlessly
+
+### 🗣️ Team Chat  
+Real-time chat functionality between Admin and Stock Keepers  
+
+![Team Chat Demo](Recording%202025-07-20%20162019.gif)
+
+
+### 👤 Customer Management
+- Add customers before billing 
 
 ---
 
-## 💻 Technology Stack
+## 👥 User Roles & Permissions
 
-| Layer         | Technology         |
-|---------------|--------------------|
-| Frontend      | HTML, CSS, JavaScript |
-| Backend       | Java Servlet (Jakarta EE) |
-| Database      | MySQL              |
-| Build Tool    | Apache Maven       |
-| Architecture  | MVC-S (Model-View-Controller-Service) |
+| Role          | Permissions                                             |
+| ------------- | -------------------------------------------------------|
+| **👨‍💼Admin**     | Analytics, Manage Items, Billing, Bill History, Bank History & amount , Users, Chat, Logout |
+| **👨🏻‍💻Stock Keeper** | Analytics, Manage Items, Chat, Logout                 |
+| **💵Cashier**   | Analytics, Add Customer, Billing, Bill History, Help, Logout  |
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer         | Technology                  |
+| ------------- | --------------------------- |
+| **Frontend**  | HTML, CSS, JavaScript       |
+| **Backend**   | Java Servlet (Jakarta EE)   |
+| **Database**  | MySQL                      |
+| **Build**     | Maven                      |
+| **Architecture** | MVC-S                   |
 
 ---
 
 ## 📸 UI Snapshots
-
-https://github.com/user-attachments/assets/64028d76-4354-4db1-89a6-3e3336e1ee85
-
-
-
 ---
+https://github.com/user-attachments/assets/1b54f7f2-1444-42ad-a812-a2e76c23901b
+## 
+https://github.com/user-attachments/assets/9dfd4c49-308c-412d-a589-03640d5e9115
+##
+https://github.com/user-attachments/assets/577bb090-d74e-44aa-8960-f5b72c8952d4
 
 ## 📁 Project Structure
 
@@ -92,7 +107,7 @@ The `BillServlet`'s GET method handles admin analytics:
 ### ✅ Prerequisites:
 
 - Java 8+  
-- Apache Tomcat or Glassfish  
+- Apache Tomcat or wildfly
 - MySQL Server  
 - Maven (for building)  
 - NetBeans / Eclipse IDE  
@@ -102,27 +117,56 @@ The `BillServlet`'s GET method handles admin analytics:
 ### 🗃️ MySQL Database Tables Required:
 
 ```sql
-CREATE TABLE customers (
-  account_no VARCHAR(50) PRIMARY KEY,
-  name VARCHAR(100)
-);
+CREATE TABLE IF NOT EXISTS `customers` (
+  `account_no` varchar(20) NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `address` text,
+  `phone` varchar(20) DEFAULT NULL,
+  `units` int(11) DEFAULT NULL,
+  PRIMARY KEY (`account_no`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE items (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(100),
-  price DOUBLE
-);
+DROP TABLE IF EXISTS `items`;
+CREATE TABLE IF NOT EXISTS `items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) DEFAULT NULL,
+  `price_per_unit` decimal(10,2) DEFAULT NULL,
+  `quantity` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE tdb (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  account_no VARCHAR(50),
-  item_id INT,
-  quantity INT,
-  unit_price DOUBLE,
-  subtotal DOUBLE,
-  total DOUBLE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+DROP TABLE IF EXISTS `tdb`;
+CREATE TABLE IF NOT EXISTS `tdb` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `account_no` varchar(50) DEFAULT NULL,
+  `item_id` int(11) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `unit_price` decimal(10,2) DEFAULT NULL,
+  `subtotal` decimal(10,2) DEFAULT NULL,
+  `total` decimal(10,2) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `team_chat`;
+CREATE TABLE IF NOT EXISTS `team_chat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) DEFAULT NULL,
+  `role` varchar(30) DEFAULT NULL,
+  `message` text,
+  `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(100) DEFAULT NULL,
+  `userRole` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
 
 ---
