@@ -39,11 +39,12 @@
 </dependency>
 
 
-    <dependency>
+<dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-j</artifactId>
-    <version>9.2.0</version>
+    <version>8.3.0</version>
 </dependency>
+
 <dependency>
   <groupId>com.google.code.gson</groupId>
   <artifactId>gson</artifactId>
