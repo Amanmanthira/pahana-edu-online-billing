@@ -1,298 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="Style.css" />
-<script src="index.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<title>📚 Cashier Dashboard</title>
-</head>
-<body>
-    
-<div class="sidebar">
-<h2 class="typing-text"><span id="typed-text"></span><span class="cursor">|</span></h2>
-  <div class="nav-item active" onclick="showSection('analytics', this)">📊 Analytics</div>
-  <div class="nav-item" onclick="showSection('customers', this)">👥 Customers</div>
-  <div class="nav-item" onclick="showSection('bill', this)">? Generate Bill</div>
-  <div class="nav-item" onclick="showSection('history', this)">💳Bill History</div>
-  <div class="nav-item" onclick="showSection('help', this)">❓ Help</div>
-</div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="Style.css" />
+        <script src="index.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <title>📚 Cashier Dashboard</title>
+    </head>
+    <body>
 
-<div class="main-content">
-  <div style="position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: #f5f5f5; border-bottom: 2px solid #ddd;">
-  <div>
-    <h1 style="margin: 0; font-size: 28px; color: #333;">Welcome Back, Cashier 👋</h1>
-    <p style="margin: 5px 0 0 0; font-size: 16px; color: #666;">You're viewing your cashier dashboard.</p>
-  </div>
-  
-  <button 
-    onclick="logout()" 
-    style="background-color: #e74c3c; color: white; border: none; padding: 10px 18px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">
-    Logout
-  </button>
+        <div class="sidebar">
+            <h2 class="typing-text"><span id="typed-text"></span><span class="cursor">|</span></h2>
+            <div class="nav-item active" onclick="showSection('analytics', this)">📊 Analytics</div>
+            <div class="nav-item" onclick="showSection('customers', this)">👥 Customers</div>
+            <div class="nav-item" onclick="showSection('bill', this)">? Generate Bill</div>
+            <div class="nav-item" onclick="showSection('history', this)">💳Bill History</div>
+            <div class="nav-item" onclick="showSection('help', this)">❓ Help</div>
+        </div>
 
-  <!-- Walking Boy -->
-  <img src="boy.gif" alt="Walking Boy" id="walkingBoy"
-    style="position: absolute; bottom: 10px; left: -150px; height: 85px; z-index: 1;">
-</div>
-    <!-- Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+        <div class="main-content">
+            <div style="position: relative; overflow: hidden; display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: #f5f5f5; border-bottom: 2px solid #ddd;">
+                <div>
+                    <h1 style="margin: 0; font-size: 28px; color: #333;">Welcome Back, Cashier 👋</h1>
+                    <p style="margin: 5px 0 0 0; font-size: 16px; color: #666;">You're viewing your cashier dashboard.</p>
+                </div>
 
-<div id="analytics" class="section" style="display:none;">
-  <h2 style="font-size: 28px; font-weight: bold; margin-bottom: 30px; color: #2c3e50;">
-    📊 Cashier Dashboard Analytics
-  </h2>
+                <button 
+                    onclick="logout()" 
+                    style="background-color: #e74c3c; color: white; border: none; padding: 10px 18px; font-size: 16px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">
+                    Logout
+                </button>
 
-  <div id="analyticsCards" style="display: flex; flex-wrap: wrap; gap: 25px;">
- <!-- Total Customers -->
-<div id="analytics-card" style="
-   flex: 1;
-    min-width: 260px;
-    background: linear-gradient(135deg, #74ebd5, #acb6e5);
-    color: #2c3e50;
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    display: flex;
-    align-items: center;
-    font-family: 'Poppins', sans-serif;
-    backdrop-filter: blur(6px);
-    transition: all 0.3s ease;
-">
-  <img src="scate.gif" alt="Skating Boy" style="height: 150px; margin-right: 2px;">
-  <div>
-    <h3 style="margin: 0; font-size: 20px; font-weight: 500; opacity: 0.85;">Total Customers</h3>
-    <p id="totalCustomers" style="margin: 5px 0 0 0; font-size: 32px; font-weight: 700;">0</p>
-  </div>
-</div>
+                <!-- Walking Boy -->
+                <img src="boy.gif" alt="Walking Boy" id="walkingBoy"
+                     style="position: absolute; bottom: 10px; left: -150px; height: 85px; z-index: 1;">
+            </div>
+            <!-- Font Awesome for icons -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-<!-- Total Items -->
-<div id="analytics-card" style="
-  flex: 1;
-    min-width: 260px;
-    background: linear-gradient(135deg, #ffecd2, #fcb69f);
-    color: #2c3e50;
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    display: flex;
-    align-items: center;
-    font-family: 'Poppins', sans-serif;
-    backdrop-filter: blur(6px);
-    transition: all 0.3s ease;
-">
-  <img src="book.gif" alt="Book" style="height: 150px; margin-right: 2px;">
-  <div>
-    <h3 style="margin: 0; font-size: 20px; font-weight: 500; opacity: 0.85;">Total Items</h3>
-    <p id="totalItems" style="margin: 5px 0 0 0; font-size: 32px; font-weight: 700;">0</p>
-  </div>
-</div>
+            <div id="analytics" class="section" style="display:none;">
+                <h2 style="font-size: 28px; font-weight: bold; margin-bottom: 30px; color: #2c3e50;">
+                    📊 Cashier Dashboard Analytics
+                </h2>
 
-<!-- Total Bills -->
-<div id="analytics-card" style="
- flex: 1;
-    min-width: 260px;
-    background: linear-gradient(135deg, #c6ffdd, #fbd786, #f7797d);
-    color: #2c3e50;
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    display: flex;
-    align-items: center;
-    font-family: 'Poppins', sans-serif;
-    backdrop-filter: blur(6px);
-    transition: all 0.3s ease;
-">
-  <img src="money.gif" alt="Money" style="height: 150px; margin-right: 2px;">
-  <div>
-    <h3 style="margin: 0; font-size: 20px; font-weight: 500; opacity: 0.85;">Total Bills (LKR)</h3>
-    <p id="totalBills" style="margin: 5px 0 0 0; font-size: 32px; font-weight: 700;">0</p>
-  </div>
-</div>
+                <div id="analyticsCards" style="display: flex; flex-wrap: wrap; gap: 25px;">
+                    <!-- Total Customers -->
+                    <div id="analytics-card" style="
+                         flex: 1;
+                         min-width: 260px;
+                         background: linear-gradient(135deg, #74ebd5, #acb6e5);
+                         color: #2c3e50;
+                         padding: 20px;
+                         border-radius: 20px;
+                         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+                         display: flex;
+                         align-items: center;
+                         font-family: 'Poppins', sans-serif;
+                         backdrop-filter: blur(6px);
+                         transition: all 0.3s ease;
+                         ">
+                        <img src="scate.gif" alt="Skating Boy" style="height: 150px; margin-right: 2px;">
+                        <div>
+                            <h3 style="margin: 0; font-size: 20px; font-weight: 500; opacity: 0.85;">Total Customers</h3>
+                            <p id="totalCustomers" style="margin: 5px 0 0 0; font-size: 32px; font-weight: 700;">0</p>
+                        </div>
+                    </div>
 
-    
-    
-  </div>
-    
-<h2 style="color:#9b59b6; font-family:'Poppins', sans-serif; font-size:28px; margin-top:50px; margin-bottom:15px;">
-  📚 Featured Products
-</h2>
+                    <!-- Total Items -->
+                    <div id="analytics-card" style="
+                         flex: 1;
+                         min-width: 260px;
+                         background: linear-gradient(135deg, #ffecd2, #fcb69f);
+                         color: #2c3e50;
+                         padding: 20px;
+                         border-radius: 20px;
+                         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+                         display: flex;
+                         align-items: center;
+                         font-family: 'Poppins', sans-serif;
+                         backdrop-filter: blur(6px);
+                         transition: all 0.3s ease;
+                         ">
+                        <img src="book.gif" alt="Book" style="height: 150px; margin-right: 2px;">
+                        <div>
+                            <h3 style="margin: 0; font-size: 20px; font-weight: 500; opacity: 0.85;">Total Items</h3>
+                            <p id="totalItems" style="margin: 5px 0 0 0; font-size: 32px; font-weight: 700;">0</p>
+                        </div>
+                    </div>
 
-<div id="productSlider" style="position:relative; overflow:hidden; padding:10px 50px; background:linear-gradient(to right, #fce4ec, #f8bbd0); border-radius:24px; box-shadow:0 8px 25px rgba(0,0,0,0.1);">
-  <button class="prev" onclick="slideProducts('left')" style="position:absolute; left:15px; top:50%; transform:translateY(-50%); background:#fff; color:#d63384; border:none; border-radius:50%; width:44px; height:44px; font-size:24px; font-weight:bold; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.1);">‹</button>
-
-  <div id="productSliderTrack" style="display:flex; gap:25px; transition:transform 0.4s ease; padding:25px 0;">
-    <!-- Cards added by JS -->
-  </div>
-
-  <button class="next" onclick="slideProducts('right')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); background:#fff; color:#d63384; border:none; border-radius:50%; width:44px; height:44px; font-size:24px; font-weight:bold; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.1);">›</button>
-</div>
- 
-           <!--   <div style="margin-top:30px; padding:20px; border:1px solid #ccc; border-radius:10px;">
-  <h3>📡 Send Real-time Message to Team</h3>
-  <div id="chatMessages" style="background:#f9f9f9; padding:10px; height:150px; overflow-y:auto; border:1px solid #ddd; border-radius:8px;"></div>
-  <input id="chatInput" type="text" placeholder="Type a message..." style="width:80%; padding:10px; margin-top:10px;" />
-  <button onclick="sendChatMessage()" style="padding:10px 20px; background:#3498db; color:white; border:none; border-radius:5px;">Send</button>
-</div> -->
-    
-</div>
+                    <!-- Total Bills -->
+                    <div id="analytics-card" style="
+                         flex: 1;
+                         min-width: 260px;
+                         background: linear-gradient(135deg, #c6ffdd, #fbd786, #f7797d);
+                         color: #2c3e50;
+                         padding: 20px;
+                         border-radius: 20px;
+                         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+                         display: flex;
+                         align-items: center;
+                         font-family: 'Poppins', sans-serif;
+                         backdrop-filter: blur(6px);
+                         transition: all 0.3s ease;
+                         ">
+                        <img src="money.gif" alt="Money" style="height: 150px; margin-right: 2px;">
+                        <div>
+                            <h3 style="margin: 0; font-size: 20px; font-weight: 500; opacity: 0.85;">Total Bills (LKR)</h3>
+                            <p id="totalBills" style="margin: 5px 0 0 0; font-size: 32px; font-weight: 700;">0</p>
+                        </div>
+                    </div>
 
 
 
-  <div id="customers" class="section">
-    <h1>Customer Management</h1>
-<div style="display: flex; align-items: flex-start; justify-content: space-between; background-color: #eaf6fb; padding: 40px; border-radius: 20px; margin-top: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); font-family: 'Poppins', sans-serif;">
+                </div>
 
-  <!-- 🌸 Cute Customer Form -->
-  <form id="customerForm" onsubmit="addOrUpdateCustomer(event)" style="flex: 1; max-width: 500px; display: flex; flex-direction: column; gap: 15px;">
-    <input type="hidden" id="customerAccountNo" />
-    <input type="text" id="customerName" placeholder="Name" required style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
-    <input type="text" id="customerAddress" placeholder="Address" required style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
-    <input type="text" id="customerPhone" placeholder="Phone" required style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
-    <input type="number" id="customerUnits" placeholder="Units Consumed" required min="0" style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
-    <input type="text" id="customerAccountNoInput" placeholder="Account Number" required style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
+                <h2 style="color:#9b59b6; font-family:'Poppins', sans-serif; font-size:28px; margin-top:50px; margin-bottom:15px;">
+                    📚 Featured Products
+                </h2>
 
-    <div style="display: flex; gap: 10px;">
-      <button type="submit" style="background-color: #48b0f7; color: white; padding: 12px 20px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer;">Add / Update Customer</button>
-      <button type="button" onclick="clearCustomerForm()" style="background-color: #2ea3d3; color: white; padding: 12px 20px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer;">Clear</button>
-    </div>
-  </form>
+                <div id="productSlider" style="position:relative; overflow:hidden; padding:10px 50px; background:linear-gradient(to right, #fce4ec, #f8bbd0); border-radius:24px; box-shadow:0 8px 25px rgba(0,0,0,0.1);">
+                    <button class="prev" onclick="slideProducts('left')" style="position:absolute; left:15px; top:50%; transform:translateY(-50%); background:#fff; color:#d63384; border:none; border-radius:50%; width:44px; height:44px; font-size:24px; font-weight:bold; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.1);">‹</button>
 
-  <!-- 🧍 3D Animation Character (Large Natural Look) -->
-  <img src="customer.gif" alt="Cute 3D Character" style="height: 550px; margin-left: 60px; object-fit: contain;" />
+                    <div id="productSliderTrack" style="display:flex; gap:25px; transition:transform 0.4s ease; padding:25px 0;">
+                        <!-- Cards added by JS -->
+                    </div>
 
-</div>
+                    <button class="next" onclick="slideProducts('right')" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); background:#fff; color:#d63384; border:none; border-radius:50%; width:44px; height:44px; font-size:24px; font-weight:bold; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.1);">›</button>
+                </div>
 
+                <!--   <div style="margin-top:30px; padding:20px; border:1px solid #ccc; border-radius:10px;">
+       <h3>📡 Send Real-time Message to Team</h3>
+       <div id="chatMessages" style="background:#f9f9f9; padding:10px; height:150px; overflow-y:auto; border:1px solid #ddd; border-radius:8px;"></div>
+       <input id="chatInput" type="text" placeholder="Type a message..." style="width:80%; padding:10px; margin-top:10px;" />
+       <button onclick="sendChatMessage()" style="padding:10px 20px; background:#3498db; color:white; border:none; border-radius:5px;">Send</button>
+     </div> -->
 
-
-
-    <table id="customerTable">
-      <thead>
-        <tr><th>Account No</th><th>Name</th><th>Address</th><th>Phone</th><th>Units</th><th>Actions</th></tr>
-      </thead>
-      <tbody>
-        <!-- Customer rows go here -->
-      </tbody>
-    </table>
-  </div>
+            </div>
 
 
-  <div id="bill" class="section" style="display:none;">
-   <h1>Generate Bill</h1>
 
-<form id="billForm" onsubmit="generateBill(event)">
-  <label>Customer:</label>
-  <select id="billCustomerSelect" required></select>
+            <div id="customers" class="section">
+                <h1>Customer Management</h1>
+                <div style="display: flex; align-items: flex-start; justify-content: space-between; background-color: #eaf6fb; padding: 40px; border-radius: 20px; margin-top: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); font-family: 'Poppins', sans-serif;">
 
-  <h3>Add Items</h3>
-  <select id="billItemSelect"></select>
-  <input type="number" id="billItemQuantity" min="1" value="1" />
-  <button type="button" onclick="addBillItem()">Add Item</button>
+                    <!-- 🌸 Cute Customer Form -->
+                    <form id="customerForm" onsubmit="addOrUpdateCustomer(event)" style="flex: 1; max-width: 500px; display: flex; flex-direction: column; gap: 15px;">
+                        <input type="hidden" id="customerAccountNo" />
+                        <input type="text" id="customerName" placeholder="Name" required style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
+                        <input type="text" id="customerAddress" placeholder="Address" required style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
+                        <input type="text" id="customerPhone" placeholder="Phone" required style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
+                        <input type="number" id="customerUnits" placeholder="Units Consumed" required min="0" style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
+                        <input type="text" id="customerAccountNoInput" placeholder="Account Number" required style="padding: 12px 16px; border-radius: 10px; border: 1px solid #cceeff; font-size: 16px;" />
 
-  <h3>Bill Items</h3>
-  <table id="billItemsTable" border="1" style="width:100%; margin-top:10px;">
-    <thead>
-      <tr>
-        <th>Item</th><th>Quantity</th><th>Unit Price</th><th>Subtotal</th><th>Action</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="submit" style="background-color: #48b0f7; color: white; padding: 12px 20px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer;">Add / Update Customer</button>
+                            <button type="button" onclick="clearCustomerForm()" style="background-color: #2ea3d3; color: white; padding: 12px 20px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer;">Clear</button>
+                        </div>
+                    </form>
 
-  <h3>Total: $<span id="billTotal">0.00</span></h3>
-  <button id="btnPrintReceipt" style="display:none; margin-top: 10px; background:#2ecc71; border:none; color:#fff; padding: 10px 20px; border-radius: 5px; cursor:pointer;">Print Receipt</button>
+                    <!-- 🧍 3D Animation Character (Large Natural Look) -->
+                    <img src="customer.gif" alt="Cute 3D Character" style="height: 550px; margin-left: 60px; object-fit: contain;" />
 
-  <button type="submit">Generate Bill</button>
-</form>
-<div id="billResult" style="margin-top:20px; font-weight: 600;"></div>
+                </div>
 
 
-  </div>
 
-<div id="history" class="section" style="display:none;">
-  <h1>Bill History</h1>
-  <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-    <thead>
-      <tr style="background: #f39c12; color: white;">
-        <th style="padding: 10px; border: 1px solid #ddd;">Account No</th>
-        <th style="padding: 10px; border: 1px solid #ddd;">Total (LKR)</th>
-        <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
-      </tr>
-    </thead>
-    <tbody id="billHistoryBody"></tbody>
-  </table>
-</div>
 
-  <div id="help" class="section" style="display:none;">
-    <h1>Help Section</h1>
-    <p>Use the sidebar to navigate between Customers, Items, Bill generation, and Help.</p>
-    <p>In Customers, add new accounts or edit existing ones.</p>
-    <p>In Items, manage items with prices.</p>
-    <p>Generate bills based on customer units and item price.</p>
-  </div>
-</div>
-<div id="printableReceipt" style="display:none; max-width: 400px; margin: 20px auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-  <div style="text-align: center; margin-bottom: 20px;">
-    <h2 style="margin: 0; color: #3498db;">Pahana Edu</h2>
-    <p style="font-size: 12px; color: #777;">123 Olkat Road, Colombo2, SriLanka</p>
-    <p style="font-size: 12px; color: #777;">Phone: +1234567890</p>
-  </div>
+                <table id="customerTable">
+                    <thead>
+                        <tr><th>Account No</th><th>Name</th><th>Address</th><th>Phone</th><th>Units</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        <!-- Customer rows go here -->
+                    </tbody>
+                </table>
+            </div>
 
-  <div id="receiptCustomerInfo" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-    <!-- Customer info inserted here -->
-  </div>
 
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-    <thead>
-      <tr style="background: #3498db; color: white;">
-        <th style="padding: 8px; text-align: left;">Item</th>
-        <th style="padding: 8px; text-align: center;">Qty</th>
-        <th style="padding: 8px; text-align: right;">Unit Price</th>
-        <th style="padding: 8px; text-align: right;">Subtotal</th>
-      </tr>
-    </thead>
-    <tbody id="receiptItems">
-      <!-- Bill items inserted here -->
-    </tbody>
-  </table>
+            <div id="bill" class="section" style="display:none;">
+                <h1>Generate Bill</h1>
 
-  <div style="text-align: right; font-weight: 700; font-size: 18px; border-top: 2px solid #3498db; padding-top: 10px;">
-    Total: $<span id="receiptTotal">0.00</span>
-  </div>
+                <form id="billForm" onsubmit="generateBill(event)">
+                    <label>Customer:</label>
+                    <select id="billCustomerSelect" required></select>
 
-  <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #777;">
-    Thank you come again🙂!
-  </div>
-</div>
+                    <h3>Add Items</h3>
+                    <select id="billItemSelect"></select>
+                    <input type="number" id="billItemQuantity" min="1" value="1" />
+                    <button type="button" onclick="addBillItem()">Add Item</button>
 
-<script>
-  new Sortable(document.getElementById('analyticsCards'), {
-    animation: 300,
-    easing: "cubic-bezier(0.25, 1, 0.5, 1)",
-    ghostClass: "sortable-ghost"
-  });
-</script>
-</body>
-<script>
-let boy = document.getElementById('walkingBoy');
-let position = -150;
+                    <h3>Bill Items</h3>
+                    <table id="billItemsTable" border="1" style="width:100%; margin-top:10px;">
+                        <thead>
+                            <tr>
+                                <th>Item</th><th>Quantity</th><th>Unit Price</th><th>Subtotal</th><th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
 
-function moveBoy() {
-  position += 1;
-  if (position > window.innerWidth) {
-    position = -150;
-  }
-  boy.style.left = position + 'px';
-  requestAnimationFrame(moveBoy);
-}
-moveBoy();
+                    <h3>Total: $<span id="billTotal">0.00</span></h3>
+                    <button id="btnPrintReceipt" style="display:none; margin-top: 10px; background:#2ecc71; border:none; color:#fff; padding: 10px 20px; border-radius: 5px; cursor:pointer;">Print Receipt</button>
 
-</script>
+                    <button type="submit">Generate Bill</button>
+                </form>
+                <div id="billResult" style="margin-top:20px; font-weight: 600;"></div>
+
+
+            </div>
+
+            <div id="history" class="section" style="display:none;">
+                <h1>Bill History</h1>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                    <thead>
+                        <tr style="background: #f39c12; color: white;">
+                            <th style="padding: 10px; border: 1px solid #ddd;">Account No</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Total (LKR)</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="billHistoryBody"></tbody>
+                </table>
+            </div>
+
+            <div id="help" class="section" style="display: none; padding: 40px; font-family: 'Segoe UI', sans-serif; background-color: #f4f6f8; color: #333; border-radius: 10px; max-width: 900px; margin: auto; box-shadow: 0 0 15px rgba(0,0,0,0.05);">
+                <h1 style="font-size: 30px; color: #2F80ED; margin-bottom: 20px;">💼 Cashier Dashboard Help</h1>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
+                    Welcome to the Cashier Dashboard! This panel gives you everything you need to assist customers, manage transactions, and keep billing on track.
+                    Here's how you can get started:
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+
+                    <!-- Dashboard -->
+                    <div style="background: white; border-left: 5px solid #2F80ED; padding: 20px; border-radius: 8px;">
+                        <h3 style="margin: 0 0 10px;">📊 View Dashboard & Analytics</h3>
+                        <p style="margin: 0;">Quickly access today's sales, total bills generated, most billed items, and key performance indicators. Stay updated at a glance.</p>
+                    </div>
+
+                    <!-- Add Customers -->
+                    <div style="background: white; border-left: 5px solid #27AE60; padding: 20px; border-radius: 8px;">
+                        <h3 style="margin: 0 0 10px;">👥 Add Customers</h3>
+                        <p style="margin: 0;">Register new customers by entering their details. This makes it easier to bill them later and track their history.</p>
+                    </div>
+
+                    <!-- Generate Bill -->
+                    <div style="background: white; border-left: 5px solid #F2994A; padding: 20px; border-radius: 8px;">
+                        <h3 style="margin: 0 0 10px;">🧾 Generate Bills</h3>
+                        <p style="margin: 0;">Create new bills by selecting a customer and adding items. The system will calculate totals automatically, including any taxes or discounts.</p>
+                    </div>
+
+                    <!-- Bill History -->
+                    <div style="background: white; border-left: 5px solid #56CCF2; padding: 20px; border-radius: 8px;">
+                        <h3 style="margin: 0 0 10px;">📂 View Bill History</h3>
+                        <p style="margin: 0;">Access and review previously generated bills. You can filter by customer or date, and reprint or download invoices when needed.</p>
+                    </div>
+
+                    <!-- Help Note -->
+                    <div style="background: white; border-left: 5px solid #333; padding: 20px; border-radius: 8px;">
+                        <h3 style="margin: 0 0 10px;">❓ Need Help?</h3>
+                        <p style="margin: 0;">If you run into any issues, reach out to your manager or system admin. You can also find detailed guides here anytime.</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div id="printableReceipt" style="display:none; max-width: 400px; margin: 20px auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2 style="margin: 0; color: #3498db;">Pahana Edu</h2>
+                <p style="font-size: 12px; color: #777;">123 Olkat Road, Colombo2, SriLanka</p>
+                <p style="font-size: 12px; color: #777;">Phone: +1234567890</p>
+            </div>
+
+            <div id="receiptCustomerInfo" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                <!-- Customer info inserted here -->
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <thead>
+                    <tr style="background: #3498db; color: white;">
+                        <th style="padding: 8px; text-align: left;">Item</th>
+                        <th style="padding: 8px; text-align: center;">Qty</th>
+                        <th style="padding: 8px; text-align: right;">Unit Price</th>
+                        <th style="padding: 8px; text-align: right;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="receiptItems">
+                    <!-- Bill items inserted here -->
+                </tbody>
+            </table>
+
+            <div style="text-align: right; font-weight: 700; font-size: 18px; border-top: 2px solid #3498db; padding-top: 10px;">
+                Total: $<span id="receiptTotal">0.00</span>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #777;">
+                Thank you come again🙂!
+            </div>
+        </div>
+
+        <script>
+            new Sortable(document.getElementById('analyticsCards'), {
+                animation: 300,
+                easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+                ghostClass: "sortable-ghost"
+            });
+        </script>
+    </body>
+    <script>
+        let boy = document.getElementById('walkingBoy');
+        let position = -150;
+
+        function moveBoy() {
+            position += 1;
+            if (position > window.innerWidth) {
+                position = -150;
+            }
+            boy.style.left = position + 'px';
+            requestAnimationFrame(moveBoy);
+        }
+        moveBoy();
+
+    </script>
 
 
 </html>
