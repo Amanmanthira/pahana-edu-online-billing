@@ -245,8 +245,8 @@ git clone https://github.com/yourusername/pahana-dashboard.git
 
 ## 📄 License
 
-This project is open-source and available under the [MIT License](LICENSE).
-
+You're free to make anything — clone this system, use it, and edit it as you like. You can even convert it into a mobile app or extend it however you want.
+In CorsFilter.java, you can set your default port — I’ve added 3000 as an example.
 ---
 
 > 🔥 **Thank you for checking out the Pahana Billing Dashboard!** Contributions, stars ⭐, and forks 🍴 are warmly welcome.
